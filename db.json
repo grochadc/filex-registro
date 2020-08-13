@@ -1,0 +1,43 @@
+{
+  "students": [
+    {
+      "id": "217792563",
+      "code": "217792563",
+      "name": "ALHELI PAOLA",
+      "firstLastName": "FLORES",
+      "secondLastName": "JIMENEZ",
+      "ciclo": "2019A",
+      "carrera": "LICENCIATURA EN ENFERMERIA (LENF)",
+      "genero": "F",
+      "celular": "3211053294",
+      "prev_level": 4,
+      "pass": true
+    },
+    {
+      "id": "216434493",
+      "code": "216434493",
+      "name": "ALFREDO",
+      "firstLastName": "JUAREZ",
+      "secondLastName": "RODRIGUEZ",
+      "ciclo": "2017B",
+      "carrera": "INGENIERIA EN SISTEMAS BIOLOGICOS (INSB)",
+      "genero": "M",
+      "celular": "3411455796",
+      "prev_level": 4,
+      "pass": true
+    },
+    {
+      "id": "216427594",
+      "code": "216427594",
+      "name": "ANA KAREN",
+      "firstLastName": "ALVAREZ",
+      "secondLastName": "VAZQUEZ",
+      "ciclo": "2019B",
+      "carrera": "MEDICO CIRUJANO Y PARTERO (MCPE)",
+      "genero": "F",
+      "celular": "3414390405",
+      "prev_level": 4,
+      "pass": true
+    }
+  ]
+}
