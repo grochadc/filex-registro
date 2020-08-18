@@ -49,14 +49,15 @@ const FormSchema = Yup.object().shape({
   schedule: Yup.string().required("Porfavor elige tu horario")
 });
 
-const useAvailableSchedules = props => {
+const useAvailableSchedules = level => {
   const [schedules, setSchedules] = useState(null);
   useEffect(() => {
-    const schedules = allSchedules[0];
+    const schedules = allSchedules[level - 1];
     database
       .ref("/registered")
       .once("value")
       .then(snapshot => {
+        //if a particular key doesnt exist push it first to the availableKeys array
         let availableKeys = [];
         snapshot.forEach(childSnapshot => {
           if (childSnapshot.numChildren() <= 2) {
@@ -77,7 +78,7 @@ function Selection(props) {
     `/students/${props.code}`
   );
   const student = response;
-  const schedule = useAvailableSchedules();
+  const schedule = useAvailableSchedules(2);
   delete student.id;
   delete student.pass;
   return (
@@ -123,11 +124,14 @@ function Selection(props) {
                 >
                   <option value="">Horarios:</option>
                   {schedule &&
-                    schedule.map((item, index) => (
-                      <option key={index} value={item.group}>
-                        {`${item.group} ${item.teacher} ${item.time}`}
-                      </option>
-                    ))}
+                    schedule.map((item, index) => {
+                      console.log("option", item);
+                      return (
+                        <option key={index} value={item.group}>
+                          {`${item.group} ${item.teacher} ${item.time}`}
+                        </option>
+                      );
+                    })}
                 </Form.Control>
                 {errors && errors.schedule ? errors.schedule : null}
               </Form.Group>
