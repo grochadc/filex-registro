@@ -3,7 +3,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 export default function Home({ handleSubmit }) {
@@ -11,7 +10,10 @@ export default function Home({ handleSubmit }) {
   return (
     <div>
       <Jumbotron>
-        <h1>Inscripcion FILEX</h1>
+        <Container>
+          <h1>FILEX 2020B</h1>
+          <h3>INSCRIPCION</h3>
+        </Container>
       </Jumbotron>
       <Container>
         <Form inline>
