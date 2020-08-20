@@ -4,9 +4,11 @@ import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
+import Alert from "react-bootstrap/Alert";
 
 export default function Home({ handleSubmit }) {
   const [code, setCode] = useState("220309342");
+  const [externo, setExterno] = useState(false);
   return (
     <div>
       <Jumbotron>
@@ -33,6 +35,17 @@ export default function Home({ handleSubmit }) {
             Enviar
           </Button>
         </Form>
+        <Form>
+          <Form.Row>
+            <Form.Check type="checkbox" value={externo} onChange={setExterno} />
+            <Form.Label>Externo</Form.Label>
+          </Form.Row>
+        </Form>
+        {externo && (
+          <Alert variant="primary">
+            Si eres externo usa tu numero celular como codigo.
+          </Alert>
+        )}
       </Container>
     </div>
   );
