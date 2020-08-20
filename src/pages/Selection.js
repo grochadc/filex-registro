@@ -86,9 +86,21 @@ function Selection(props) {
             {({ values, errors, handleChange, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 {Object.keys(values).map((key, index) => {
+                  const labels = {
+                    code: "Codigo",
+                    name: "Nombre:",
+                    firstLastName: "Apellido Paterno",
+                    secondLastName: "Appelido Materno",
+                    ciclo: "Clico de Ingreso",
+                    carrera: "Carrera",
+                    genero: "Género",
+                    email: "Correo Electronico",
+                    celular: "Telefono Celular:",
+                    prev_level: "Nivel Anterior"
+                  };
                   return (
                     <Form.Group controlId={key} key={index}>
-                      <Form.Label>{`${key}: `}</Form.Label>
+                      <Form.Label>{`${labels[key]}: `}</Form.Label>
                       <Form.Control
                         value={values[key]}
                         onChange={handleChange}
@@ -119,7 +131,7 @@ function Selection(props) {
                   </Form.Control>
                   {errors && errors.schedule ? errors.schedule : null}
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" className="mb-3">
                   Enviar
                 </Button>
               </Form>

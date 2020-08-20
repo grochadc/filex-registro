@@ -8,7 +8,7 @@ import Alert from "react-bootstrap/Alert";
 
 export default function Home({ handleSubmit }) {
   const [code, setCode] = useState("220309342");
-  const [externo, setExterno] = useState(false);
+  const [ubicacion, setUbicacion] = useState(false);
   return (
     <div>
       <Jumbotron>
@@ -36,16 +36,18 @@ export default function Home({ handleSubmit }) {
           </Button>
         </Form>
         <Form>
-          <Form.Row>
-            <Form.Check type="checkbox" value={externo} onChange={setExterno} />
-            <Form.Label>Externo</Form.Label>
+          <Form.Row className="mt-2">
+            <Form.Check
+              type="checkbox"
+              value={ubicacion}
+              onChange={setUbicacion}
+            />
+            <Form.Label>Hice examen de Ubicacion</Form.Label>
           </Form.Row>
         </Form>
-        {externo && (
-          <Alert variant="primary">
-            Si eres externo usa tu numero celular como codigo.
-          </Alert>
-        )}
+        <Alert variant="primary" className="mt-4 w-50">
+          Si eres externo usa tu numero celular como codigo.
+        </Alert>
       </Container>
     </div>
   );
