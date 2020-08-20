@@ -7,30 +7,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
 
-const allSchedules = [
-  [
-    { group: "E1-1", teacher: "Gonzalo Rocha", time: "7:00 - 8:00" },
-    { group: "E1-2", teacher: "Gonzalo Rocha", time: "8:00 - 9:00" },
-    { group: "E1-3", teacher: "Gonzalo Rocha", time: "9:00 - 10:00" }
-  ],
-  [
-    { group: "E2-1", teacher: "Gonzalo Rocha", time: "7:00 - 8:00" },
-    { group: "E2-2", teacher: "Gonzalo Rocha", time: "8:00 - 9:00" }
-  ],
-  [
-    { group: "E3-1", teacher: "Gonzalo Rocha", time: "7:00 - 8:00" },
-    { group: "E3-2", teacher: "Gonzalo Rocha", time: "8:00 - 9:00" }
-  ],
-  [
-    { group: "E4-1", teacher: "Gonzalo Rocha", time: "7:00 - 8:00" },
-    { group: "E4-2", teacher: "Gonzalo Rocha", time: "8:00 - 9:00" }
-  ],
-  [
-    { group: "E5-1", teacher: "Gonzalo Rocha", time: "7:00 - 8:00" },
-    { group: "E5-2", teacher: "Gonzalo Rocha", time: "8:00 - 9:00" }
-  ]
-];
-
 const FormSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Too Short!")
@@ -54,24 +30,17 @@ const useAvailableSchedules = level => {
   const [schedules, setSchedules] = useState(null);
   useEffect(
     () => {
-      const schedules = allSchedules[level - 1];
-      database
-        .ref("/registered")
-        .once("value")
-        .then(snapshot => {
-          //if a particular key doesnt exist push it first to the availableKeys array
-          let availableKeys = [];
-          snapshot.forEach(childSnapshot => {
-            if (childSnapshot.numChildren() <= 2) {
-              availableKeys.push(childSnapshot.key);
-            }
+      if (level) {
+        database
+          .ref(`schedules/level${level}`)
+          .once("value")
+          .then(snapshot => {
+            const availableSchedules = snapshot
+              .val()
+              .filter(schedule => schedule.registered < 35);
+            setSchedules(availableSchedules);
           });
-          const availableSchedules = schedules.filter(
-            schedule =>
-              availableKeys.filter(key => schedule.group === key).length
-          );
-          setSchedules(availableSchedules);
-        });
+      }
     },
     [level]
   );
@@ -81,14 +50,17 @@ const useAvailableSchedules = level => {
 function Selection(props) {
   const { response, loading, status } = useFetch(`/students/${props.code}`);
   const student = response;
-  const schedule = useAvailableSchedules(2);
+  const current_level = student.pass
+    ? student.prev_level + 1
+    : student.prev_level;
+  const schedule = useAvailableSchedules(current_level);
   delete student.id;
   delete student.pass;
   return (
     <div>
       <Jumbotron>
         <Container>
-          <h1> Bienvenido a Nivel {student.prev_level + 1}!</h1>
+          <h1> Bienvenido a Nivel {current_level}!</h1>
           <h2> Verifica que tus datos sean correctos y elige tu horario:</h2>
         </Container>
       </Jumbotron>
@@ -133,15 +105,17 @@ function Selection(props) {
                     onChange={handleChange}
                   >
                     <option value="">Horarios:</option>
-                    {schedule &&
+                    {schedule ? (
                       schedule.map((item, index) => {
-                        console.log("option", item);
                         return (
                           <option key={index} value={item.group}>
                             {`${item.group} ${item.teacher} ${item.time}`}
                           </option>
                         );
-                      })}
+                      })
+                    ) : (
+                      <option>Cargando horarios...</option>
+                    )}
                   </Form.Control>
                   {errors && errors.schedule ? errors.schedule : null}
                 </Form.Group>

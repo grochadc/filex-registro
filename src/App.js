@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import Selection from "./pages/Selection";
 import Home from "./pages/Home";
 import Success from "./pages/Success";
-import { postToDB } from "./lib";
+import { database, postToDB } from "./lib";
 
 const Router = ({ currentRoute, children }) => {
   return React.Children.map(children, child =>
@@ -32,17 +32,29 @@ export default function App() {
       <Router.View route="selection">
         <Selection
           code={code}
-          handleSubmit={studentInfo => {
+          handleSubmit={async studentInfo => {
             setInfo(studentInfo);
-            postToDB(
+            await postToDB(
               `/registered/${studentInfo.schedule}/${studentInfo.code}`,
               {
                 level: studentInfo.prev_level + 1,
                 ...studentInfo
               }
-            )
-              .then(() => console.log("posting to db successful"))
-              .catch(() => console.log("Error posting to db"));
+            );
+            const current_schedule_string = studentInfo.schedule[0];
+            console.log("schedule", typeof current_schedule_string);
+            const current_level = current_schedule_string.substring(1, 2);
+            const current_schedule_index =
+              current_schedule_string.substring(3) - 1;
+            const registered_count_snapshot = await database
+              .ref(
+                `schedules/level${current_level}/${current_schedule_index}/registered`
+              )
+              .once("value");
+            const registered_count = registered_count_snapshot.val();
+            await database
+              .ref(`schedules/level${current_level}/${current_schedule_index}`)
+              .update({ registered: registered_count + 1 });
             setCurrentRoute("success");
             console.log("info from Selection", studentInfo);
           }}
