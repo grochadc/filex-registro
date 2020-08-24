@@ -48,7 +48,7 @@ const useAvailableSchedules = level => {
 };
 
 function Selection(props) {
-  const { response, loading, status } = useFetch(`/students/${props.code}`);
+  const { response, loading, status } = useFetch(props.code, props.external);
   const student = response;
   const current_level = student.pass
     ? student.prev_level + 1
