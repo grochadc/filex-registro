@@ -53,9 +53,10 @@ function Selection(props) {
   const current_level = student.pass
     ? student.prev_level + 1
     : student.prev_level;
+  console.log("current_level", current_level);
+  console.log(student.pass, student.prev_level);
   const schedule = useAvailableSchedules(current_level);
   delete student.id;
-  delete student.pass;
   return (
     <div>
       <Jumbotron>
@@ -88,17 +89,17 @@ function Selection(props) {
                 {Object.keys(values).map((key, index) => {
                   const labels = {
                     code: "Codigo",
-                    name: "Nombre:",
+                    name: "Nombre",
                     firstLastName: "Apellido Paterno",
                     secondLastName: "Appelido Materno",
                     ciclo: "Clico de Ingreso",
                     carrera: "Carrera",
                     genero: "Género",
                     email: "Correo Electronico",
-                    celular: "Telefono Celular:",
+                    celular: "Telefono Celular",
                     prev_level: "Nivel Anterior"
                   };
-                  return (
+                  return key === "pass" ? null : (
                     <Form.Group controlId={key} key={index}>
                       <Form.Label>{`${labels[key]}: `}</Form.Label>
                       <Form.Control
@@ -112,7 +113,6 @@ function Selection(props) {
                   <Form.Label>Elige tu horario:</Form.Label>
                   <Form.Control
                     as="select"
-                    multiple
                     value={values.schedule}
                     onChange={handleChange}
                   >
