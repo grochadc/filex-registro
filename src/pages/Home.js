@@ -5,6 +5,7 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
+import { isPast } from "date-fns";
 
 export default function Home({ handleSubmit }) {
   const [code, setCode] = useState("220309342");
@@ -31,7 +32,11 @@ export default function Home({ handleSubmit }) {
               </Col>
             </Form.Group>
           </Form.Row>
-          <Button variant="primary" onClick={() => handleSubmit(code)}>
+          <Button
+            variant="primary"
+            onClick={() => handleSubmit(code)}
+            disabled={!isPast(new Date(2020, 8, 1, 8, 30))}
+          >
             Enviar
           </Button>
         </Form>
