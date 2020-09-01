@@ -6,6 +6,15 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import { isPast } from "date-fns";
+
+function disableButton() {
+  if (process.env.NODE_ENV === "production") {
+    return !isPast(new Date(2020, 8, 8, 9, 0));
+  } else {
+    return false;
+  }
+}
 
 const FormSchema = Yup.object().shape({
   name: Yup.string()
@@ -53,8 +62,6 @@ function Selection(props) {
   const current_level = student.pass
     ? student.prev_level + 1
     : student.prev_level;
-  console.log("current_level", current_level);
-  console.log(student.pass, student.prev_level);
   const schedule = useAvailableSchedules(current_level);
   delete student.id;
   return (
@@ -78,6 +85,8 @@ function Selection(props) {
               Atrás
             </Button>
           </div>
+        ) : status === 500 ? (
+          <p>No se pudo conectar al servidor. Favor de intentar mas tarde.</p>
         ) : (
           <Formik
             initialValues={response}
@@ -131,7 +140,12 @@ function Selection(props) {
                   </Form.Control>
                   {errors && errors.schedule ? errors.schedule : null}
                 </Form.Group>
-                <Button variant="primary" type="submit" className="mb-3">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="mb-3"
+                  disabled={disableButton()}
+                >
                   Enviar
                 </Button>
               </Form>
