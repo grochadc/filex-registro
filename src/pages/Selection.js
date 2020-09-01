@@ -53,8 +53,6 @@ function Selection(props) {
   const current_level = student.pass
     ? student.prev_level + 1
     : student.prev_level;
-  console.log("current_level", current_level);
-  console.log(student.pass, student.prev_level);
   const schedule = useAvailableSchedules(current_level);
   delete student.id;
   return (
@@ -78,6 +76,8 @@ function Selection(props) {
               Atrás
             </Button>
           </div>
+        ) : status === 500 ? (
+          <p>No se pudo conectar al servidor. Favor de intentar mas tarde.</p>
         ) : (
           <Formik
             initialValues={response}
