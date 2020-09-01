@@ -7,6 +7,14 @@ import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import { isPast } from "date-fns";
 
+function disableButton() {
+  if (process.env.NODE_ENV === "production") {
+    return !isPast(new Date(2020, 8, 8, 8, 59));
+  } else {
+    return false;
+  }
+}
+
 export default function Home({ handleSubmit }) {
   const [code, setCode] = useState("220309342");
   const [ubicacion, setUbicacion] = useState(false);
@@ -35,7 +43,7 @@ export default function Home({ handleSubmit }) {
           <Button
             variant="primary"
             onClick={() => handleSubmit(code)}
-            disabled={!isPast(new Date(2020, 8, 1, 8, 30))}
+            disabled={disableButton()}
           >
             Enviar
           </Button>
