@@ -6,6 +6,15 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import { isPast } from "date-fns";
+
+function disableButton() {
+  if (process.env.NODE_ENV === "production") {
+    return !isPast(new Date(2020, 8, 8, 9, 0));
+  } else {
+    return false;
+  }
+}
 
 const FormSchema = Yup.object().shape({
   name: Yup.string()
@@ -131,7 +140,12 @@ function Selection(props) {
                   </Form.Control>
                   {errors && errors.schedule ? errors.schedule : null}
                 </Form.Group>
-                <Button variant="primary" type="submit" className="mb-3">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="mb-3"
+                  disabled={disableButton()}
+                >
                   Enviar
                 </Button>
               </Form>
