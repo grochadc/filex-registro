@@ -16,7 +16,7 @@ function disableButton() {
 }
 
 export default function Home({ handleSubmit }) {
-  const [code, setCode] = useState("220309342");
+  const [code, setCode] = useState();
   const [ubicacion, setUbicacion] = useState(false);
   const handleClick = () => setUbicacion(!ubicacion);
   console.log("ubicacion", ubicacion);
@@ -57,7 +57,7 @@ export default function Home({ handleSubmit }) {
               value={ubicacion}
               onClick={handleClick}
             />
-            <Form.Label>Hice examen de Ubicacion</Form.Label>
+            <Form.Label>Nuevo Ingreso</Form.Label>
           </Form.Row>
         </Form>
         <Alert variant="primary" className="mt-4 w-50">
