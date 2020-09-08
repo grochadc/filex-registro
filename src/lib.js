@@ -8,13 +8,13 @@ const postToDB = (endpoint, data) => {
   return database.ref(endpoint).set(data);
 };
 
-const useFetch = (code, freshmen, options) => {
+const useFetch = (code, endpoint, options) => {
   const [response, setResponse] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const url = freshmen ? `freshmen/${code}` : `students/${code}`;
+  const url = endpoint ? `${endpoint}/${code}` : `students/${code}`;
 
   useEffect(
     () => {
@@ -35,7 +35,7 @@ const useFetch = (code, freshmen, options) => {
       };
       doFetch();
     },
-    [url, options, freshmen]
+    [url, options, endpoint]
   );
   return { response, error, loading, status };
 };

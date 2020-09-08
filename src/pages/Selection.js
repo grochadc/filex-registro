@@ -26,6 +26,17 @@ const FormSchema = Yup.object().shape({
   schedule: Yup.string().required("Porfavor elige tu horario")
 });
 
+const NuevoIngresoSchema = Yup.object().shape({
+  APELLIDOM: Yup.string(),
+  APELLIDOP: Yup.string(),
+  CEL: Yup.string(),
+  CICLO: Yup.string(),
+  CODIGO: Yup.string(),
+  CORREO: Yup.string().email("Ingresa un email valido"),
+  DESCRIPLAN: Yup.string(),
+  NOMBRE: Yup.string()
+});
+
 const useAvailableSchedules = level => {
   const [schedules, setSchedules] = useState(null);
   useEffect(
@@ -48,8 +59,11 @@ const useAvailableSchedules = level => {
 };
 
 function Selection(props) {
-  const { response, loading, status } = useFetch(props.code, props.ubicacion);
+  const endpoint = props.ubicacion ? "freshmen" : "students";
+  const { response, loading, status } = useFetch(props.code, endpoint);
   const student = response;
+
+  console.log("student", student);
   let current_level;
   if (props.ubicacion) {
     current_level = student["NIVEL FINAL"];
@@ -58,6 +72,8 @@ function Selection(props) {
   }
   const schedule = useAvailableSchedules(current_level);
   delete student.id;
+
+  const current_schema = props.ubicacion ? NuevoIngresoSchema : FormSchema;
   return (
     <div>
       <Jumbotron>
@@ -83,9 +99,9 @@ function Selection(props) {
           <p>No se pudo conectar al servidor. Favor de intentar mas tarde.</p>
         ) : (
           <Formik
-            initialValues={response}
+            initialValues={{ ...response, level: current_level }}
             onSubmit={props.handleSubmit}
-            validationSchema={FormSchema}
+            validationSchema={current_schema}
           >
             {({ values, errors, handleChange, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
@@ -102,7 +118,8 @@ function Selection(props) {
                     celular: "Telefono Celular",
                     prev_level: "Nivel Anterior"
                   };
-                  return key === "pass" ? null : props.ubicacion ? (
+                  return (key === "pass") |
+                    (key === "schedule") ? null : props.ubicacion ? (
                     <Form.Group controlId={key} key={index}>
                       <Form.Label>{`${key}: `}</Form.Label>
                       <Form.Control

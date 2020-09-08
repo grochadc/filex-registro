@@ -36,13 +36,11 @@ export default function App() {
           code={code}
           ubicacion={ubicacion}
           handleSubmit={async studentInfo => {
+            console.log("Submitted info", studentInfo);
             setInfo(studentInfo);
             await postToDB(
               `/registered/${studentInfo.schedule}/${studentInfo.code}`,
-              {
-                level: studentInfo.prev_level + 1,
-                ...studentInfo
-              }
+              studentInfo
             );
             const current_schedule_string = studentInfo.schedule[0];
             console.log("schedule", typeof current_schedule_string);

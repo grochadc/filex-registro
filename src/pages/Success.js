@@ -41,7 +41,9 @@ const messages = {
 };
 
 export default function Success(props) {
-  const currentMessage = messages[props.info.schedule];
+  const currentMessage = messages.hasOwnProperty(props.info.schedule)
+    ? messages[props.info.schedule]
+    : { chat: false };
   return (
     <div>
       <h1>Felicidades {props.info.name}!</h1>

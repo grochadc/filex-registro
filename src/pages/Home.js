@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
@@ -15,11 +15,24 @@ function disableButton() {
   }
 }
 
+const initialState = {
+  nuevo_ingreso: true,
+  reubicacion: false
+};
+const myReducer = (state, action) => {
+  switch (action.type) {
+    case "nuevo_ingreso":
+      return { nuevo_ingreso: !state.nuevo_ingreso, reubicacion: false };
+    case "reubicacion":
+      return { reubicacion: !state.reubicacion, nuevo_ingreso: false };
+    default:
+      return state;
+  }
+};
+
 export default function Home({ handleSubmit }) {
+  const [state, dispatch] = useReducer(myReducer, initialState);
   const [code, setCode] = useState();
-  const [ubicacion, setUbicacion] = useState(false);
-  const handleClick = () => setUbicacion(!ubicacion);
-  console.log("ubicacion", ubicacion);
   return (
     <div>
       <Jumbotron>
@@ -44,7 +57,9 @@ export default function Home({ handleSubmit }) {
           </Form.Row>
           <Button
             variant="primary"
-            onClick={() => handleSubmit({ code, ubicacion })}
+            onClick={() =>
+              handleSubmit({ code, ubicacion: state.nuevo_ingreso })
+            }
             disabled={disableButton()}
           >
             Enviar
@@ -54,10 +69,17 @@ export default function Home({ handleSubmit }) {
           <Form.Row className="mt-2">
             <Form.Check
               type="checkbox"
-              value={ubicacion}
-              onClick={handleClick}
+              checked={state.nuevo_ingreso}
+              onClick={() => dispatch({ type: "nuevo_ingreso" })}
             />
             <Form.Label>Nuevo Ingreso</Form.Label>
+            <span style={{ margin: "10px" }}> </span>
+            <Form.Check
+              type="checkbox"
+              checked={state.reubicacion}
+              onClick={() => dispatch({ type: "reubicacion" })}
+            />
+            <Form.Label>Reubicacion</Form.Label>
           </Form.Row>
         </Form>
         <Alert variant="primary" className="mt-4 w-50">
