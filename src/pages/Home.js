@@ -16,7 +16,7 @@ function disableButton() {
 }
 
 const initialState = {
-  nuevo_ingreso: true,
+  nuevo_ingreso: false,
   reubicacion: false
 };
 const myReducer = (state, action) => {
@@ -32,6 +32,11 @@ const myReducer = (state, action) => {
 
 export default function Home({ handleSubmit }) {
   const [state, dispatch] = useReducer(myReducer, initialState);
+  const studentStatus = state.nuevo_ingreso
+    ? "freshmen"
+    : state.reubicacion
+      ? "reubicacion"
+      : "students";
   const [code, setCode] = useState();
   return (
     <div>
@@ -57,9 +62,7 @@ export default function Home({ handleSubmit }) {
           </Form.Row>
           <Button
             variant="primary"
-            onClick={() =>
-              handleSubmit({ code, ubicacion: state.nuevo_ingreso })
-            }
+            onClick={() => handleSubmit({ code, studentStatus })}
             disabled={disableButton()}
           >
             Enviar

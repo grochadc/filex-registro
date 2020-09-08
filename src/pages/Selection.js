@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { database, useFetch } from "../lib";
 import { Formik } from "formik";
-import { NuevoIngresoSchema, FormSchema } from "./ValidationSchemas";
+import { FormSchema } from "./ValidationSchemas";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
 
 function hideInput(key) {
-  if (key === "pass" || key === "schedule" || key === "NIVEL FINAL") {
+  if (key === "schedule" || key === "id") {
     return true;
   } else {
     return false;
@@ -16,26 +16,18 @@ function hideInput(key) {
 }
 
 function Selection(props) {
-  const endpoint = props.ubicacion ? "freshmen" : "students";
+  const endpoint = props.studentStatus; // either freshman, reubicacion, or students
+  console.log("endpoint", endpoint);
   const { response, loading, status } = useFetch(props.code, endpoint);
   const student = response;
+  const schedule = useAvailableSchedules(student.level);
 
-  console.log("student", student);
-  let current_level;
-  if (props.ubicacion) {
-    current_level = student["NIVEL FINAL"];
-  } else {
-    current_level = student.pass ? student.prev_level + 1 : student.prev_level;
-  }
-  const schedule = useAvailableSchedules(current_level);
-  delete student.id;
-
-  const current_schema = props.ubicacion ? NuevoIngresoSchema : FormSchema;
+  const current_schema = FormSchema;
   return (
     <div>
       <Jumbotron>
         <Container>
-          <h1> Bienvenido a Nivel {current_level}!</h1>
+          <h1> Bienvenido a Nivel {student.level}!</h1>
           <h2> Verifica que tus datos sean correctos y elige tu horario:</h2>
         </Container>
       </Jumbotron>
@@ -56,7 +48,7 @@ function Selection(props) {
           <p>No se pudo conectar al servidor. Favor de intentar mas tarde.</p>
         ) : (
           <Formik
-            initialValues={{ ...response, level: current_level }}
+            initialValues={student}
             onSubmit={props.handleSubmit}
             validationSchema={current_schema}
           >
@@ -73,23 +65,11 @@ function Selection(props) {
                     genero: "Género",
                     email: "Correo Electronico",
                     celular: "Telefono Celular",
-                    prev_level: "Nivel Anterior"
+                    prev_level: "Nivel Anterior",
+                    course: "Curso",
+                    level: "Nivel"
                   };
-                  return hideInput(key) ? null : props.ubicacion ? (
-                    <Form.Group controlId={key} key={index}>
-                      <Form.Label>{`${key}: `}</Form.Label>
-                      <Form.Control
-                        value={values[key]}
-                        onChange={handleChange}
-                        disabled={
-                          (key === "ESCRITO") |
-                          (key === "ORAL") |
-                          (key === "NIVEL FINAL") |
-                          (key === "level")
-                        }
-                      />
-                    </Form.Group>
-                  ) : (
+                  return hideInput(key) ? null : (
                     <Form.Group controlId={key} key={index}>
                       <Form.Label>{`${labels[key]}: `}</Form.Label>
                       <Form.Control

@@ -17,16 +17,16 @@ Router.View = ({ route, currentRoute, children }) => (
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState("home");
   const [code, setCode] = useState("");
-  const [ubicacion, setUbicacion] = useState(false);
+  const [studentStatus, setStudentStatus] = useState("students");
   const [info, setInfo] = useState({});
 
   return (
     <Router currentRoute={currentRoute}>
       <Router.View route="home">
         <Home
-          handleSubmit={({ code, ubicacion }) => {
+          handleSubmit={({ code, studentStatus }) => {
             setCode(code);
-            setUbicacion(ubicacion);
+            setStudentStatus(studentStatus);
             setCurrentRoute("selection");
           }}
         />
@@ -34,7 +34,7 @@ export default function App() {
       <Router.View route="selection">
         <Selection
           code={code}
-          ubicacion={ubicacion}
+          studentStatus={studentStatus}
           handleSubmit={async studentInfo => {
             console.log("Submitted info", studentInfo);
             setInfo(studentInfo);
