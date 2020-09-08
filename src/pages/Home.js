@@ -18,6 +18,8 @@ function disableButton() {
 export default function Home({ handleSubmit }) {
   const [code, setCode] = useState("220309342");
   const [ubicacion, setUbicacion] = useState(false);
+  const handleClick = () => setUbicacion(!ubicacion);
+  console.log("ubicacion", ubicacion);
   return (
     <div>
       <Jumbotron>
@@ -42,7 +44,7 @@ export default function Home({ handleSubmit }) {
           </Form.Row>
           <Button
             variant="primary"
-            onClick={() => handleSubmit(code)}
+            onClick={() => handleSubmit({ code, ubicacion })}
             disabled={disableButton()}
           >
             Enviar
@@ -53,7 +55,7 @@ export default function Home({ handleSubmit }) {
             <Form.Check
               type="checkbox"
               value={ubicacion}
-              onChange={setUbicacion}
+              onClick={handleClick}
             />
             <Form.Label>Hice examen de Ubicacion</Form.Label>
           </Form.Row>

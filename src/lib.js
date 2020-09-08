@@ -8,30 +8,24 @@ const postToDB = (endpoint, data) => {
   return database.ref(endpoint).set(data);
 };
 
-const useFetch = (code, applicant, options) => {
+const useFetch = (code, freshmen, options) => {
   const [response, setResponse] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const url = applicant ? `applicants${code}` : `students/${code}`;
+  const url = freshmen ? `freshmen/${code}` : `students/${code}`;
 
   useEffect(
     () => {
       const doFetch = async () => {
         setLoading(true);
         try {
-          if (applicant) {
-            //if appllicant fetch firebase
-            const res = await database.ref(url);
-            setResponse(res.val());
-            setStatus("200");
-          } else {
-            const res = await fetch(url, options);
-            const json = await res.json();
-            setStatus(res.status);
-            setResponse(json);
-          }
+          const res = await fetch(url, options);
+          const json = await res.json();
+          console.log("res status", res.status);
+          setStatus(res.status);
+          setResponse(json);
         } catch (e) {
           console.log(e);
           setError(e);
@@ -41,7 +35,7 @@ const useFetch = (code, applicant, options) => {
       };
       doFetch();
     },
-    [url, options, applicant]
+    [url, options, freshmen]
   );
   return { response, error, loading, status };
 };

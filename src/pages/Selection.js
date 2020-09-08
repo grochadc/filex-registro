@@ -57,11 +57,14 @@ const useAvailableSchedules = level => {
 };
 
 function Selection(props) {
-  const { response, loading, status } = useFetch(props.code, props.external);
+  const { response, loading, status } = useFetch(props.code, props.ubicacion);
   const student = response;
-  const current_level = student.pass
-    ? student.prev_level + 1
-    : student.prev_level;
+  let current_level;
+  if (props.ubicacion) {
+    current_level = student["NIVEL FINAL"];
+  } else {
+    current_level = student.pass ? student.prev_level + 1 : student.prev_level;
+  }
   const schedule = useAvailableSchedules(current_level);
   delete student.id;
   return (
@@ -108,7 +111,20 @@ function Selection(props) {
                     celular: "Telefono Celular",
                     prev_level: "Nivel Anterior"
                   };
-                  return key === "pass" ? null : (
+                  return key === "pass" ? null : props.ubicacion ? (
+                    <Form.Group controlId={key} key={index}>
+                      <Form.Label>{`${key}: `}</Form.Label>
+                      <Form.Control
+                        value={values[key]}
+                        onChange={handleChange}
+                        disabled={
+                          (key === "ESCRITO") |
+                          (key === "ORAL") |
+                          (key === "NIVEL FINAL")
+                        }
+                      />
+                    </Form.Group>
+                  ) : (
                     <Form.Group controlId={key} key={index}>
                       <Form.Label>{`${labels[key]}: `}</Form.Label>
                       <Form.Control
