@@ -1,62 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { database, useFetch } from "../lib";
 import { Formik } from "formik";
-import * as Yup from "yup";
+import { NuevoIngresoSchema, FormSchema } from "./ValidationSchemas";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
 
-const FormSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  firstLastName: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  secondLastName: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  code: Yup.number()
-    .min(5, "Too short")
-    .required("Required"),
-  schedule: Yup.string().required("Porfavor elige tu horario")
-});
-
-const NuevoIngresoSchema = Yup.object().shape({
-  APELLIDOM: Yup.string(),
-  APELLIDOP: Yup.string(),
-  CEL: Yup.string(),
-  CICLO: Yup.string(),
-  CODIGO: Yup.string(),
-  CORREO: Yup.string().email("Ingresa un email valido"),
-  DESCRIPLAN: Yup.string(),
-  NOMBRE: Yup.string()
-});
-
-const useAvailableSchedules = level => {
-  const [schedules, setSchedules] = useState(null);
-  useEffect(
-    () => {
-      if (level) {
-        database
-          .ref(`schedules/level${level}`)
-          .once("value")
-          .then(snapshot => {
-            const availableSchedules = snapshot
-              .val()
-              .filter(schedule => schedule.registered < 35);
-            setSchedules(availableSchedules);
-          });
-      }
-    },
-    [level]
-  );
-  return schedules;
-};
+function hideInput(key) {
+  if (key === "pass" || key === "schedule" || key === "NIVEL FINAL") {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 function Selection(props) {
   const endpoint = props.ubicacion ? "freshmen" : "students";
@@ -118,8 +75,7 @@ function Selection(props) {
                     celular: "Telefono Celular",
                     prev_level: "Nivel Anterior"
                   };
-                  return (key === "pass") |
-                    (key === "schedule") ? null : props.ubicacion ? (
+                  return hideInput(key) ? null : props.ubicacion ? (
                     <Form.Group controlId={key} key={index}>
                       <Form.Label>{`${key}: `}</Form.Label>
                       <Form.Control
@@ -128,7 +84,8 @@ function Selection(props) {
                         disabled={
                           (key === "ESCRITO") |
                           (key === "ORAL") |
-                          (key === "NIVEL FINAL")
+                          (key === "NIVEL FINAL") |
+                          (key === "level")
                         }
                       />
                     </Form.Group>
@@ -138,6 +95,7 @@ function Selection(props) {
                       <Form.Control
                         value={values[key]}
                         onChange={handleChange}
+                        disabled={key === "level"}
                       />
                     </Form.Group>
                   );
@@ -175,5 +133,25 @@ function Selection(props) {
     </div>
   );
 }
+const useAvailableSchedules = level => {
+  const [schedules, setSchedules] = useState(null);
+  useEffect(
+    () => {
+      if (level) {
+        database
+          .ref(`schedules/level${level}`)
+          .once("value")
+          .then(snapshot => {
+            const availableSchedules = snapshot
+              .val()
+              .filter(schedule => schedule.registered < 35);
+            setSchedules(availableSchedules);
+          });
+      }
+    },
+    [level]
+  );
+  return schedules;
+};
 
 export default Selection;
