@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import Alert from "react-bootstrap/Alert";
 
 const frenchSchedules = [
   { group: "F1-1", teacher: "Felipe", time: "NA" },
@@ -29,7 +30,6 @@ function Selection(props) {
   const { response, loading, status } = useFetch(props.code, endpoint);
   const student = response;
   const schedule = useAvailableSchedules(student.level, student.course);
-  console.log(schedule);
 
   const current_schema = FormSchema;
   return (
@@ -41,6 +41,12 @@ function Selection(props) {
         </Container>
       </Jumbotron>
       <Container>
+        {student.level === "2" && student.course === "english" ? (
+          <Alert variant="primary">
+            Por el momento todos los grupos de nivel 2 estan llenos. Gracias por
+            tu comprensión.
+          </Alert>
+        ) : null}
         {loading ? (
           <p>Cargando...</p>
         ) : status === 404 ? (
