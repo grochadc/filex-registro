@@ -5,11 +5,10 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
-import { isPast } from "date-fns";
 
 function disableButton() {
   if (process.env.NODE_ENV === "production") {
-    return !isPast(new Date(2020, 8, 7, 8, 59));
+    return true;
   } else {
     return false;
   }
