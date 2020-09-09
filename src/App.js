@@ -42,8 +42,7 @@ export default function App() {
               `/registered/${studentInfo.schedule}/${studentInfo.code}`,
               studentInfo
             );
-            const current_schedule_string = studentInfo.schedule[0];
-            console.log("schedule", typeof current_schedule_string);
+            const current_schedule_string = studentInfo.schedule;
             const current_level = current_schedule_string.substring(1, 2);
             const current_schedule_index =
               current_schedule_string.substring(3) - 1;
