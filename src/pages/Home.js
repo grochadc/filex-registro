@@ -8,7 +8,7 @@ import Alert from "react-bootstrap/Alert";
 
 function disableButton() {
   if (process.env.NODE_ENV === "production") {
-    return false;
+    return true;
   } else {
     return false;
   }
