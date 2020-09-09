@@ -7,6 +7,15 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
 
+const frenchSchedules = [
+  { group: "F1-1", teacher: "Felipe", time: "NA" },
+  { group: "F2-1", teacher: "Felipe", time: "NA" },
+  { group: "F3-1", teacher: "Felipe", time: "NA" },
+  { group: "F4-1", teacher: "Felipe", time: "NA" },
+  { group: "F5-1", teacher: "Felipe", time: "NA" },
+  { group: "F6-1", teacher: "Felipe", time: "NA" }
+];
+
 function hideInput(key) {
   if (key === "schedule" || key === "id") {
     return true;
@@ -17,10 +26,10 @@ function hideInput(key) {
 
 function Selection(props) {
   const endpoint = props.studentStatus; // either freshman, reubicacion, or students
-  console.log("endpoint", endpoint);
   const { response, loading, status } = useFetch(props.code, endpoint);
   const student = response;
-  const schedule = useAvailableSchedules(student.level);
+  const schedule = useAvailableSchedules(student.level, student.course);
+  console.log(schedule);
 
   const current_schema = FormSchema;
   return (
@@ -113,11 +122,11 @@ function Selection(props) {
     </div>
   );
 }
-const useAvailableSchedules = level => {
+const useAvailableSchedules = (level, course) => {
   const [schedules, setSchedules] = useState(null);
   useEffect(
     () => {
-      if (level) {
+      if (level && course === "english") {
         database
           .ref(`schedules/level${level}`)
           .once("value")
@@ -127,9 +136,12 @@ const useAvailableSchedules = level => {
               .filter(schedule => schedule.registered < 35);
             setSchedules(availableSchedules);
           });
+      } else if (course === "french") {
+        console.log([frenchSchedules[level - 1]]);
+        setSchedules([frenchSchedules[level - 1]]);
       }
     },
-    [level]
+    [level, course]
   );
   return schedules;
 };
