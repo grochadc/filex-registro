@@ -31,7 +31,7 @@ function Selection(props) {
   const student = response;
   const schedule = useAvailableSchedules(student.level, student.course);
   const current_schema = FormSchema;
-  const levelNotRegistering = student.level > 3;
+  const levelNotRegistering = student.level > 4;
   return (
     <div>
       <Jumbotron>
