@@ -30,8 +30,8 @@ function Selection(props) {
   const { response, loading, status } = useFetch(props.code, endpoint);
   const student = response;
   const schedule = useAvailableSchedules(student.level, student.course);
-
   const current_schema = FormSchema;
+  const levelNotRegistering = student.level > 3;
   return (
     <div>
       <Jumbotron>
@@ -45,6 +45,12 @@ function Selection(props) {
           <Alert variant="primary">
             Por el momento todos los grupos de nivel 2 estan llenos. Gracias por
             tu comprensión.
+          </Alert>
+        ) : null}
+        {student.course === "english" && levelNotRegistering ? (
+          <Alert variant="primary">
+            El registro para nivel {student.level} no es hoy. Favor de regresar
+            el dia asignado.
           </Alert>
         ) : null}
         {loading ? (
@@ -117,7 +123,12 @@ function Selection(props) {
                   </Form.Control>
                   {errors && errors.schedule ? errors.schedule : null}
                 </Form.Group>
-                <Button variant="primary" type="submit" className="mb-3">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="mb-3"
+                  disabled={levelNotRegistering}
+                >
                   Enviar
                 </Button>
               </Form>
