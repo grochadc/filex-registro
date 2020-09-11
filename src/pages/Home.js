@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
@@ -30,6 +30,12 @@ const myReducer = (state, action) => {
 };
 
 export default function Home({ handleSubmit }) {
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      document.title = "(LOCAL) Registro FILEX 2020B";
+    }
+  }, []);
+  console.log("Title", document.title);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const studentStatus = state.nuevo_ingreso
     ? "freshmen"
