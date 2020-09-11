@@ -13,21 +13,7 @@ const FormSchema = Yup.object().shape({
     .min(2, "Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
-  code: Yup.number()
-    .min(5, "Too short")
-    .required("Required"),
   schedule: Yup.string().required("Porfavor elige tu horario")
 });
 
-const NuevoIngresoSchema = Yup.object().shape({
-  APELLIDOM: Yup.string(),
-  APELLIDOP: Yup.string(),
-  CEL: Yup.string(),
-  CICLO: Yup.string(),
-  CODIGO: Yup.string(),
-  CORREO: Yup.string().email("Ingresa un email valido"),
-  DESCRIPLAN: Yup.string(),
-  NOMBRE: Yup.string()
-});
-
-export { FormSchema, NuevoIngresoSchema };
+export { FormSchema };

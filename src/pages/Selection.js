@@ -102,6 +102,9 @@ function Selection(props) {
                         onChange={handleChange}
                         disabled={key === "level"}
                       />
+                      {errors && errors[key] ? (
+                        <Alert variant="danger">{errors[key]}</Alert>
+                      ) : null}
                     </Form.Group>
                   );
                 })}
@@ -125,7 +128,9 @@ function Selection(props) {
                       <option>Cargando horarios...</option>
                     )}
                   </Form.Control>
-                  {errors && errors.schedule ? errors.schedule : null}
+                  {errors && errors.schedule ? (
+                    <Alert variant="danger">{errors.schedule}</Alert>
+                  ) : null}
                 </Form.Group>
                 <Button
                   variant="primary"
