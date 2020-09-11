@@ -30,8 +30,12 @@ function Selection(props) {
   const { response, loading, status } = useFetch(props.code, endpoint);
   const student = response;
   const schedule = useAvailableSchedules(student.level, student.course);
+  console.log("schedules", schedule);
   const current_schema = FormSchema;
-  const levelNotRegistering = student.level > 4;
+  const levelNotRegistering = Boolean(
+    (student.level === 2) | (student.level === 3)
+  );
+  const levelFull = schedule && schedule.length === 0;
   return (
     <div>
       <Jumbotron>
@@ -41,10 +45,10 @@ function Selection(props) {
         </Container>
       </Jumbotron>
       <Container>
-        {student.level === "2" && student.course === "english" ? (
+        {levelFull ? (
           <Alert variant="primary">
-            Por el momento todos los grupos de nivel 2 estan llenos. Gracias por
-            tu comprensión.
+            Por el momento todos los grupos de nivel {student.level} estan
+            llenos. Gracias por tu comprensión.
           </Alert>
         ) : null}
         {student.course === "english" && levelNotRegistering ? (
@@ -127,7 +131,7 @@ function Selection(props) {
                   variant="primary"
                   type="submit"
                   className="mb-3"
-                  disabled={levelNotRegistering}
+                  disabled={levelNotRegistering | levelFull}
                 >
                   Enviar
                 </Button>
@@ -154,7 +158,6 @@ const useAvailableSchedules = (level, course) => {
             setSchedules(availableSchedules);
           });
       } else if (course === "french") {
-        console.log([frenchSchedules[level - 1]]);
         setSchedules([frenchSchedules[level - 1]]);
       }
     },
