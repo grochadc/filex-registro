@@ -4,6 +4,7 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import history from "./utils/history";
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import Selection from "./pages/Selection";
 import Success from "./pages/Success";
 
@@ -30,6 +31,9 @@ function App() {
           <Route path="/selection/:code">
             <Selection setMutationResponse={setMutationResponse} />
             <Link to="/">Elegir otro codigo</Link>
+          </Route>
+          <Route path="/dashboard">
+            <Dashboard />
           </Route>
           <Route path="/">
             <Home />

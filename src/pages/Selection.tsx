@@ -4,7 +4,8 @@ import Button from "react-bootstrap/Button";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams, useHistory } from "react-router-dom";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_APPLICANT, REGISTER_STUDENT } from "../queries";
 
 const labels = {
   codigo: "Codigo:",
@@ -19,76 +20,6 @@ const labels = {
   nivel: "Nivel:",
   curso: "Curso:",
 };
-
-export const GET_APPLICANT = gql`
-  query info($codigo: ID!) {
-    registeringLevel
-    applicant(codigo: $codigo) {
-      codigo
-      nombre
-      apellido_materno
-      apellido_paterno
-      genero
-      carrera
-      ciclo
-      telefono
-      email
-      nivel
-      curso
-      externo
-      nuevo_ingreso
-      schedules {
-        group
-        serialized
-      }
-    }
-  }
-`;
-
-export const REGISTER_STUDENT = gql`
-  mutation register(
-    $codigo: ID!
-    $nombre: String!
-    $apellido_materno: String!
-    $apellido_paterno: String!
-    $genero: String!
-    $carrera: String!
-    $ciclo: String!
-    $telefono: String!
-    $email: String!
-    $nivel: String!
-    $curso: String!
-    $externo: Boolean!
-    $nuevo_ingreso: Boolean!
-    $schedule: String!
-  ) {
-    registerStudent(
-      input: {
-        codigo: $codigo
-        nombre: $nombre
-        apellido_materno: $apellido_materno
-        apellido_paterno: $apellido_paterno
-        genero: $genero
-        carrera: $carrera
-        ciclo: $ciclo
-        telefono: $telefono
-        email: $email
-        nivel: $nivel
-        curso: $curso
-        externo: $externo
-        nuevo_ingreso: $nuevo_ingreso
-        grupo: $schedule
-      }
-    ) {
-      nombre
-      schedule {
-        group
-        teacher
-        time
-      }
-    }
-  }
-`;
 
 const composeInitialValues = (applicant) => {
   if (applicant === undefined) return [[], {}];

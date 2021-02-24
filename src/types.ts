@@ -22,3 +22,8 @@ export interface MutationResponse {
     time: String;
   };
 }
+
+export type Action = {
+  type: string;
+  payload?: any;
+};
