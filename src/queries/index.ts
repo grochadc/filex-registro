@@ -28,10 +28,11 @@ export const GET_APPLICANT = gql`
       nivel
       curso
       externo
-      nuevo_ingreso
+      registering
       schedules {
+        teacher
         group
-        serialized
+        serialized(options: { teacher: true, group: true })
       }
     }
   }
@@ -51,7 +52,6 @@ export const REGISTER_STUDENT = gql`
     $nivel: String!
     $curso: String!
     $externo: Boolean!
-    $nuevo_ingreso: Boolean!
     $schedule: String!
   ) {
     registerStudent(
@@ -68,7 +68,6 @@ export const REGISTER_STUDENT = gql`
         nivel: $nivel
         curso: $curso
         externo: $externo
-        nuevo_ingreso: $nuevo_ingreso
         grupo: $schedule
       }
     ) {

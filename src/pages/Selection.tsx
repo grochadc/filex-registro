@@ -23,7 +23,7 @@ const labels = {
 
 const composeInitialValues = (applicant) => {
   if (applicant === undefined) return [[], {}];
-  const { schedules, __typename, ...rest } = applicant;
+  const { schedules, registering, ...rest } = applicant;
   return [schedules, rest];
 };
 
@@ -35,14 +35,14 @@ const Selection = (props: { setMutationResponse: any }) => {
   const [schedules, initialValues] = composeInitialValues(
     data && data.applicant
   );
-  const [registerStudent] = useMutation(REGISTER_STUDENT);
+  const [registerStudent] = useMutation(REGISTER_STUDENT, {
+    onCompleted: (mutationData) => {
+      props.setMutationResponse(mutationData.registerStudent);
+      history.push("/success");
+    },
+  });
   const handleSubmit = (values) => {
-    registerStudent({ variables: values })
-      .then((res) => {
-        props.setMutationResponse(res.data.registerStudent);
-        history.push("/success");
-      })
-      .catch(console.error);
+    registerStudent({ variables: values }).catch(console.error);
   };
 
   const Schema = Yup.object().shape({
@@ -57,10 +57,13 @@ const Selection = (props: { setMutationResponse: any }) => {
   const isInvalidCode = /^[0-9]+$/.test(params.code) ? false : true;
 
   if (query.loading) return <p>Loading...</p>;
-  if (query.error) return <>{JSON.stringify(query.error)}</>;
+  if (query.error) {
+    console.log(query.error);
+    return <>{JSON.stringify(query.error)}</>;
+  }
   if (isInvalidCode)
     return <Alert variant="danger">Ese no es un codigo valido.</Alert>;
-  if (!data.registeringLevel.includes(Number(data.applicant.nivel)))
+  if (!data.applicant.registering)
     return (
       <Alert variant="warning">
         Hoy no es dia de registro para nivel {data.applicant.nivel}. Por favor
@@ -77,7 +80,6 @@ const Selection = (props: { setMutationResponse: any }) => {
   return (
     <div>
       <h1>Selection</h1>
-      <p>{params.code}</p>
       <Form onSubmit={formik.handleSubmit}>
         {Object.keys(formik.values).map((el: string, index: any) => {
           if (["schedule", "nuevo_ingreso", "externo"].includes(el))
@@ -89,7 +91,7 @@ const Selection = (props: { setMutationResponse: any }) => {
                 type="text"
                 value={formik.values[el]}
                 onChange={formik.handleChange}
-                disabled={["codigo", "nivel"].includes(el)}
+                disabled={["codigo", "nivel", "curso"].includes(el)}
               />
             </Form.Group>
           );

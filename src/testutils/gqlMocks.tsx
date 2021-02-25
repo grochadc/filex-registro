@@ -1,4 +1,4 @@
-import { GET_APPLICANT, REGISTER_STUDENT } from "../pages/Selection";
+import { GET_APPLICANT, REGISTER_STUDENT } from "../queries";
 export interface Mock {
   request: { query: any; variables?: any };
   result: { data: any };
@@ -17,20 +17,21 @@ const applicantInfo = {
   nivel: "4",
   curso: "en",
   externo: false,
-  nuevo_ingreso: false,
+  schedule: "E4-1",
 };
 
 export const getApplicantMock: Mock = {
   request: { query: GET_APPLICANT, variables: { codigo: "1234567890" } },
   result: {
     data: {
-      registeringLevel: [4, 5],
       applicant: {
         ...applicantInfo,
+        registering: true,
         schedules: [
           {
+            teacher: "Gonzalo Rocha",
             group: "E4-1",
-            serialized: "E4-1 Gonzalo Rocha 07:00-08:00",
+            serialized: "E4-1 Gonzalo Rocha",
           },
         ],
       },
@@ -45,11 +46,12 @@ export const registerStudentMock: Mock = {
   },
   result: {
     data: {
-      nombre: applicantInfo.nombre,
-      schedule: {
-        group: "E4-1",
-        teacher: "Gonzalo Rocha",
-        time: "7:00-8:00",
+      registerStudent: {
+        nombre: applicantInfo.nombre,
+        schedule: {
+          group: "E4-1",
+          teacher: "Gonzalo Rocha",
+        },
       },
     },
   },

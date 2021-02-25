@@ -13,7 +13,7 @@ const ServerUri =
 
 const client = new ApolloClient({
   uri: ServerUri,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({ addTypename: false }),
   connectToDevtools: true,
 });
 

@@ -1,16 +1,18 @@
-import React from "react";
+import * as React from "react";
 import { render } from "@testing-library/react";
 import { getApplicantMock, registerStudentMock } from "./gqlMocks";
 import { MockedProvider } from "@apollo/client/testing";
 
+const MockedProviderAny = MockedProvider as any;
+
 const AllTheProviders = ({ children }) => {
   return (
-    <MockedProvider
+    <MockedProviderAny
       mocks={[getApplicantMock, registerStudentMock]}
       addTypename={false}
     >
       {children}
-    </MockedProvider>
+    </MockedProviderAny>
   );
 };
 

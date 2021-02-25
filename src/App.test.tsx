@@ -18,12 +18,9 @@ test("Integration", async () => {
   userEvent.selectOptions(schedulePicker, "E4-1");
 
   expect(
-    screen.getByRole("option", { name: "E4-1 Gonzalo Rocha 07:00-08:00" })
-      .selected
+    screen.getByRole("option", { name: "E4-1 Gonzalo Rocha" }).selected
   ).toBe(true);
 
-  /* For some reason mutation.then() is not being called and therefore history.push("/success") isn't being called either
   userEvent.click(screen.getByRole("button", { name: /enviar/i }));
   expect(await screen.findByText(/felicidades/i)).toBeInTheDocument();
-  */
 });
