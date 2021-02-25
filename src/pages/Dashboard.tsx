@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
     setSavingLevels(true);
     setLevelsSaved(false);
     saveLevels({
-      variables: { levels },
+      variables: { levels, course: "en" },
     });
   };
   if (query.loading) return <div>Cargando...</div>;
@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
     <div>
       <h1>Settings</h1>
       <LevelsRegistering
-        registering={query.data.registeringLevels}
+        registering={query.data.english}
         handleSave={handleSave}
       />
       {savingLevels ? <Alert>Saving levels...</Alert> : null}
