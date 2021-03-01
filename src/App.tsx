@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
-import history from "./utils/history";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Selection from "./pages/Selection";
@@ -17,7 +16,7 @@ function App() {
   };
   const [mutationResponse, setMutationResponse] = useState(initialValues);
   return (
-    <Router history={history}>
+    <div>
       <Jumbotron>
         <h1>FILEX 2021A</h1>
         <h2>INSCRIPCION</h2>
@@ -40,7 +39,7 @@ function App() {
           </Route>
         </Switch>
       </Container>
-    </Router>
+    </div>
   );
 }
 

@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { BrowserRouter as Router } from "react-router-dom";
+import history from "./utils/history";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const ServerUri =
@@ -20,7 +22,9 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <Router history={history}>
+        <App />
+      </Router>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")

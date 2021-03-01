@@ -74,7 +74,9 @@ export const REGISTER_STUDENT = gql`
       schedule {
         group
         teacher
-        time
+        chat
+        classroom
+        sesiones
       }
     }
   }

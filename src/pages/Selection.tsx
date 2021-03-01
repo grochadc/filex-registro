@@ -58,8 +58,14 @@ const Selection = (props: { setMutationResponse: any }) => {
 
   if (query.loading) return <p>Loading...</p>;
   if (query.error) {
-    console.log(query.error);
-    return <>{JSON.stringify(query.error)}</>;
+    switch (query.error.graphQLErrors[0].extensions.code) {
+      case "APPLICANT_NOT_FOUND":
+        return <Alert>No encontramos ningún alumno con ese código.</Alert>;
+      case "ALREADY_REGISTERED":
+        return <Alert>{query.error.graphQLErrors[0].message}</Alert>;
+      default:
+        return <div>{JSON.stringify(query.error)}</div>;
+    }
   }
   if (isInvalidCode)
     return <Alert variant="danger">Ese no es un codigo valido.</Alert>;
@@ -73,7 +79,7 @@ const Selection = (props: { setMutationResponse: any }) => {
   if (schedules.length === 0)
     return (
       <Alert variant="warning">
-        Lo sentimos, todos los grupos pra nivel {data.applicant.nivel} estan
+        Lo sentimos, todos los grupos para nivel {data.applicant.nivel} estan
         llenos.
       </Alert>
     );

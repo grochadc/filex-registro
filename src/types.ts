@@ -19,7 +19,9 @@ export interface MutationResponse {
   schedule: {
     group: String;
     teacher: String;
-    time: String;
+    chat: string;
+    classroom: string;
+    sesiones: string;
   };
 }
 

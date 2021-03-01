@@ -1,8 +1,7 @@
+import { ApolloError } from "@apollo/client";
+import { GraphQLError } from "graphql";
 import { GET_APPLICANT, REGISTER_STUDENT } from "../queries";
-export interface Mock {
-  request: { query: any; variables?: any };
-  result: { data: any };
-}
+import { Mock } from "./types";
 
 const applicantInfo = {
   codigo: "1234567890",
@@ -39,6 +38,41 @@ export const getApplicantMock: Mock = {
   },
 };
 
+const APPLICANT_NOT_FOUND = "APPLICANT_NOT_FOUND";
+
+export const getApplicantNotFound: Mock = {
+  request: {
+    query: GET_APPLICANT,
+    variables: { codigo: "1234509876" },
+  },
+  result: {
+    errors: [
+      new GraphQLError(
+        "No applicant found with code 123450987",
+        null,
+        null,
+        null,
+        null,
+        null,
+        { code: APPLICANT_NOT_FOUND }
+      ),
+    ],
+  },
+};
+
+export const levelsFullMock: Mock = {
+  request: { query: GET_APPLICANT, variables: { codigo: "1234567890" } },
+  result: {
+    data: {
+      applicant: {
+        ...applicantInfo,
+        registering: true,
+        schedules: [],
+      },
+    },
+  },
+};
+
 export const registerStudentMock: Mock = {
   request: {
     query: REGISTER_STUDENT,
@@ -51,6 +85,9 @@ export const registerStudentMock: Mock = {
         schedule: {
           group: "E4-1",
           teacher: "Gonzalo Rocha",
+          chat: "somechatlink",
+          classroom: "someclassroomlink",
+          sesiones: "somesesioneslink",
         },
       },
     },
