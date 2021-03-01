@@ -13,9 +13,20 @@ const Success = (props: { mutationResponse: MutationResponse | undefined }) => {
       </p>
       <div>
         Aqui tienes todos los links que necesitas para entrar a la clase:
-        <p>Chat: {schedule.chat}</p>
-        <p>Classroom: {schedule.classroom}</p>
-        <p>Sesiones: {schedule.sesiones}</p>
+        <p>
+          Chat: <a href={schedule.chat}>{schedule.chat}</a>
+        </p>
+        <p>
+          Classroom:{" "}
+          {/(http).+/.test(schedule.classroom) ? (
+            <a href={schedule.classroom}>{schedule.classroom}</a>
+          ) : (
+            schedule.classroom
+          )}
+        </p>
+        <p>
+          Sesiones: <a href={schedule.sesiones}>{schedule.sesiones}</a>
+        </p>
       </div>
     </div>
   );
