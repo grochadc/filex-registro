@@ -14,7 +14,7 @@ export interface Applicant {
   nuevo_ingreso: boolean;
 }
 
-export interface MutationResponse {
+export declare interface MutationResponse {
   nombre: String;
   schedule: {
     group: String;

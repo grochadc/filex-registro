@@ -1,6 +1,7 @@
 import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { Loading, Error } from "../components/utils";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams, useHistory } from "react-router-dom";
@@ -56,16 +57,9 @@ const Selection = (props: { setMutationResponse: any }) => {
   });
   const isInvalidCode = /^[0-9]+$/.test(params.code) ? false : true;
 
-  if (query.loading) return <p>Loading...</p>;
+  if (query.loading) return <Loading />;
   if (query.error) {
-    switch (query.error.graphQLErrors[0].extensions.code) {
-      case "APPLICANT_NOT_FOUND":
-        return <Alert>No encontramos ningún alumno con ese código.</Alert>;
-      case "ALREADY_REGISTERED":
-        return <Alert>{query.error.graphQLErrors[0].message}</Alert>;
-      default:
-        return <div>{JSON.stringify(query.error)}</div>;
-    }
+    return <Error err={query.error} />;
   }
   if (isInvalidCode)
     return <Alert variant="danger">Ese no es un codigo valido.</Alert>;

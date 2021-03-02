@@ -81,3 +81,15 @@ export const REGISTER_STUDENT = gql`
     }
   }
 `;
+
+export const GET_SCHEDULE = gql`
+  query getSchedule($id: String!) {
+    schedule(id: $id) {
+      group
+      teacher
+      chat
+      classroom
+      sesiones
+    }
+  }
+`;
