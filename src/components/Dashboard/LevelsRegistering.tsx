@@ -20,8 +20,9 @@ const Level: React.FC<LevelProps> = (props) => (
 );
 
 export type LevelsFormProps = {
+  course: "en" | "fr";
   registering: number[];
-  handleSave: (newRegistering: number[]) => void;
+  handleSave: (newRegistering: string[], course: "en" | "fr") => void;
 };
 const LevelsForm: React.FC<LevelsFormProps> = (props) => {
   const handleSave = props.handleSave;
@@ -48,11 +49,13 @@ const LevelsForm: React.FC<LevelsFormProps> = (props) => {
     return { type: CHECK_LEVEL, payload: { index, checked } };
   };
   const newRegistering = checkedControl
-    .map((el, index) => el && index + 1)
+    .map((el, index) => el && (index + 1).toString())
     .filter((el) => el);
   return (
     <div>
-      <h3>Registering Levels:</h3>
+      <h3>
+        Registering Levels ({props.course === "en" ? "English" : "French"}):
+      </h3>
       {elements.map((el, index) => (
         <Level
           key={index}
@@ -63,7 +66,9 @@ const LevelsForm: React.FC<LevelsFormProps> = (props) => {
           }
         />
       ))}
-      <Button onClick={() => handleSave(newRegistering)}>Save</Button>
+      <Button onClick={() => handleSave(newRegistering, props.course)}>
+        Save
+      </Button>
     </div>
   );
 };
