@@ -34,7 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "schema:generate": "graphql-codegen --config codegen.js"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +56,11 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.1.1",
+    "@graphql-codegen/introspection": "^2.1.0",
+    "@graphql-codegen/typescript": "^2.1.0",
+    "@graphql-codegen/typescript-operations": "^2.1.0",
+    "@graphql-codegen/typescript-react-apollo": "^3.1.0",
     "@storybook/addon-actions": "^6.1.19",
     "@storybook/addon-essentials": "^6.1.19",
     "@storybook/addon-links": "^6.1.19",

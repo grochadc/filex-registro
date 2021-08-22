@@ -1,15 +1,20 @@
 import * as React from "react";
 import LevelsRegistering from "../components/Dashboard/LevelsRegistering";
 import Alert from "react-bootstrap/Alert";
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { SAVE_LEVELS_REGISTERING } from "../queries";
+import { gql } from "@apollo/client";
 import {
-  GetLevelsRegisteringQuery,
-  SaveLevelsMutationVariables,
-} from "../types/graphql-server";
+  useGetLevelsRegisteringQuery,
+  useSaveLevelsMutation,
+} from "../__generated__/grapqhl-types";
 
-const GET_LEVELS_REGISTERING = gql`
-  {
+export const SAVE_LEVELS_REGISTERING = gql`
+  mutation saveLevels($levels: [String!]!, $course: String!) {
+    saveRegisteringLevels(levels: $levels, course: $course)
+  }
+`;
+
+export const GET_LEVELS_REGISTERING = gql`
+  query getLevelsRegistering {
     english: registeringLevels(course: "en")
     french: registeringLevels(course: "fr")
   }
@@ -18,9 +23,9 @@ const GET_LEVELS_REGISTERING = gql`
 const Dashboard: React.FC = () => {
   const [savingLevels, setSavingLevels] = React.useState(false);
   const [levelsSaved, setLevelsSaved] = React.useState(false);
-  const query = useQuery(GET_LEVELS_REGISTERING);
-  const { data }: { data: GetLevelsRegisteringQuery } = query;
-  const [saveLevels] = useMutation(SAVE_LEVELS_REGISTERING, {
+  const query = useGetLevelsRegisteringQuery();
+  const { data } = query;
+  const [saveLevels] = useSaveLevelsMutation({
     onCompleted: () => {
       setSavingLevels(false);
       setLevelsSaved(true);
@@ -30,7 +35,7 @@ const Dashboard: React.FC = () => {
   const handleSave = (levels: string[], course: "en" | "fr") => {
     setSavingLevels(true);
     setLevelsSaved(false);
-    const variables: SaveLevelsMutationVariables = { levels, course };
+    const variables = { levels, course };
     saveLevels({
       variables,
     });
@@ -41,12 +46,12 @@ const Dashboard: React.FC = () => {
     <div>
       <h1>Settings</h1>
       <LevelsRegistering
-        registering={data.english}
+        registering={data?.english!}
         course="en"
         handleSave={handleSave}
       />
       <LevelsRegistering
-        registering={data.french}
+        registering={data?.french!}
         course="fr"
         handleSave={handleSave}
       />

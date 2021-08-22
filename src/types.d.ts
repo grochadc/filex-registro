@@ -14,17 +14,6 @@ export interface Applicant {
   nuevo_ingreso: boolean;
 }
 
-export declare interface MutationResponse {
-  nombre: String;
-  schedule: {
-    group: String;
-    teacher: String;
-    chat: string;
-    classroom: string;
-    sesiones: string;
-  };
-}
-
 export type Action = {
   type: string;
   payload?: any;

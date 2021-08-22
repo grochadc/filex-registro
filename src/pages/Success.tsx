@@ -1,6 +1,8 @@
-import { MutationResponse } from "../types";
+import { RegisterMutation } from "../__generated__/grapqhl-types";
 
-const Success = (props: { mutationResponse: MutationResponse | undefined }) => {
+const Success = (props: {
+  mutationResponse: RegisterMutation["registerStudent"] | undefined;
+}) => {
   const { nombre, schedule } = props.mutationResponse;
   return (
     <div>
@@ -12,20 +14,9 @@ const Success = (props: { mutationResponse: MutationResponse | undefined }) => {
         {schedule.teacher}.
       </p>
       <div>
-        Aqui tienes todos los links que necesitas para entrar a la clase:
+        Aqui tienes el link para contactar a tu maestro:
         <p>
-          Chat: <a href={schedule.chat}>{schedule.chat}</a>
-        </p>
-        <p>
-          Classroom:{" "}
-          {/(http).+/.test(schedule.classroom) ? (
-            <a href={schedule.classroom}>{schedule.classroom}</a>
-          ) : (
-            schedule.classroom
-          )}
-        </p>
-        <p>
-          Sesiones: <a href={schedule.sesiones}>{schedule.sesiones}</a>
+          <a href={schedule.entry}>{schedule.entry}</a>
         </p>
       </div>
     </div>

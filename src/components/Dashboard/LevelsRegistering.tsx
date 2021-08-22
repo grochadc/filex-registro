@@ -21,10 +21,10 @@ const Level: React.FC<LevelProps> = (props) => (
 
 export type LevelsFormProps = {
   course: "en" | "fr";
-  registering: number[];
+  registering: string[];
   handleSave: (newRegistering: string[], course: "en" | "fr") => void;
 };
-const LevelsForm: React.FC<LevelsFormProps> = (props) => {
+const LevelsForm = (props: LevelsFormProps) => {
   const handleSave = props.handleSave;
   const CHECK_LEVEL = "CHECK_LEVEL";
   const reducer = (state: any[], action: Action) => {
@@ -40,8 +40,11 @@ const LevelsForm: React.FC<LevelsFormProps> = (props) => {
     }
   };
   const elements = new Array(6).fill(false);
-  const getInitialState = (blank: boolean[], payload: number[]): boolean[] => {
-    return blank.map((checked, index) => payload.includes(index + 1));
+  const getInitialState = (blank: boolean[], payload: string[]): boolean[] => {
+    return blank.map((checked, index) => {
+      const me = (index + 1).toString();
+      return payload.includes(me);
+    });
   };
   const initialState = getInitialState(elements, props.registering);
   const [checkedControl, dispatch] = React.useReducer(reducer, initialState);

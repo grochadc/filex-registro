@@ -1,11 +1,22 @@
 import * as React from "react";
 import Alert from "react-bootstrap/Alert";
-import { GET_SCHEDULE } from "../queries";
-import { useQuery } from "@apollo/client";
+import { useQuery, gql } from "@apollo/client";
+
+export const GET_SCHEDULE = gql`
+  query getSchedule($id: String!) {
+    schedule(id: $id) {
+      group
+      teacher
+      chat
+      classroom
+      sesiones
+    }
+  }
+`;
 
 export const Loading = () => <div>Cargando...</div>;
 
-export const Error = (props) => {
+export const Error = (props: any) => {
   switch (props.err.graphQLErrors[0].extensions.code) {
     case "APPLICANT_NOT_FOUND":
       return <Alert>No encontramos ningún alumno con ese código.</Alert>;
