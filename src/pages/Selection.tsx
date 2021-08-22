@@ -6,7 +6,7 @@ import { Loading, Error } from "../components/utils";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams, useHistory } from "react-router-dom";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 import {
   useInfoQuery,
   useRegisterMutation,
@@ -86,6 +86,7 @@ export const GET_APPLICANT = gql`
   }
 `;
 
+/*
 const labels = {
   codigo: "Codigo:",
   nombre: "Nombre:",
@@ -99,6 +100,7 @@ const labels = {
   nivel: "Nivel:",
   curso: "Curso:",
 };
+*/
 
 const composeInitialValues = (applicant: any) => {
   if (applicant === undefined) return [[], {}];
@@ -150,7 +152,7 @@ const Selection = (props: { setMutationResponse: any }) => {
       props.setMutationResponse(resultForSuccess);
       history.push("/success");
     }
-  }, [data]);
+  }, [data, history, props]);
 
   if (query.loading) return <Loading />;
   if (query.error) {
