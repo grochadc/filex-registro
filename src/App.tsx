@@ -6,13 +6,15 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Selection from "./pages/Selection";
 import Success from "./pages/Success";
+import EditApplicantPage from "./pages/EditApplicantPage";
 
 import { MutationResponse } from "./types";
+//import {MutationResponse} from "./__generated__/grapqhl-types";
 
 function App() {
   const initialValues: MutationResponse = {
     nombre: "",
-    schedule: { group: "", teacher: "", time: "" },
+    schedule: { group: "", teacher: "", time: "", entry: "" },
   };
   const [mutationResponse, setMutationResponse] = useState(initialValues);
   return (
@@ -33,6 +35,10 @@ function App() {
           </Route>
           <Route path="/dashboard">
             <Dashboard />
+          </Route>
+          <Route path="/editApplicant/:code">
+            <EditApplicantPage />
+            <Link to="/dashboard">Elegir otro codigo</Link>
           </Route>
           <Route path="/">
             <Home />

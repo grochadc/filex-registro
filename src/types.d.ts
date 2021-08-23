@@ -18,3 +18,8 @@ export type Action = {
   type: string;
   payload?: any;
 };
+
+export type MutationResponse = {
+  nombre: string;
+  schedule: { group: string; teacher: string; time: string; entry: string };
+};

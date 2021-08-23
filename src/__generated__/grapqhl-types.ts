@@ -40,6 +40,39 @@ export type Applicant = {
   registeredSchedule?: Maybe<Schedule>;
 };
 
+export type ApplicantInput = {
+  codigo: Scalars['ID'];
+  nombre: Scalars['String'];
+  apellido_materno: Scalars['String'];
+  apellido_paterno: Scalars['String'];
+  genero: Scalars['String'];
+  carrera: Scalars['String'];
+  ciclo: Scalars['String'];
+  telefono: Scalars['String'];
+  email: Scalars['String'];
+  nivel: Scalars['String'];
+  curso: Scalars['String'];
+  externo: Scalars['Boolean'];
+  desertor: Scalars['Boolean'];
+};
+
+export type ApplicantResponse = {
+  __typename?: 'ApplicantResponse';
+  codigo: Scalars['ID'];
+  nombre: Scalars['String'];
+  apellido_materno: Scalars['String'];
+  apellido_paterno: Scalars['String'];
+  genero: Scalars['String'];
+  carrera: Scalars['String'];
+  ciclo: Scalars['String'];
+  telefono: Scalars['String'];
+  email: Scalars['String'];
+  nivel: Scalars['String'];
+  curso: Scalars['String'];
+  externo: Scalars['Boolean'];
+  desertor: Scalars['Boolean'];
+};
+
 export type AttendingStudent = {
   codigo: Scalars['String'];
   nombre: Scalars['String'];
@@ -108,6 +141,7 @@ export type Mutation = {
   databaseSet: Scalars['Int'];
   registerStudent: RegisterResponse;
   saveRegisteringLevels: Array<Scalars['String']>;
+  saveApplicant: ApplicantResponse;
   makeWorkshopReservation: ReturnedReservation;
   saveWorkshopsAttendance: SaveWorkshopsAttendanceResponse;
   resetReservations: Scalars['Boolean'];
@@ -153,6 +187,12 @@ export type MutationRegisterStudentArgs = {
 export type MutationSaveRegisteringLevelsArgs = {
   levels: Array<Scalars['String']>;
   course: Scalars['String'];
+};
+
+
+export type MutationSaveApplicantArgs = {
+  codigo: Scalars['String'];
+  input: ApplicantInput;
 };
 
 
@@ -501,6 +541,21 @@ export type GetLevelsRegisteringQueryVariables = Exact<{ [key: string]: never; }
 
 export type GetLevelsRegisteringQuery = { __typename?: 'Query', english: Array<string>, french: Array<string> };
 
+export type GetApplicantForEditQueryVariables = Exact<{
+  codigo: Scalars['ID'];
+}>;
+
+
+export type GetApplicantForEditQuery = { __typename?: 'Query', applicant: { __typename?: 'Applicant', codigo: string, nombre: string, apellido_paterno: string, apellido_materno: string, genero: string, ciclo: string, carrera: string, telefono: string, email: string, externo: boolean, desertor: boolean, nivel: string, curso: string } };
+
+export type ModifyApplicantMutationVariables = Exact<{
+  codigo: Scalars['String'];
+  input: ApplicantInput;
+}>;
+
+
+export type ModifyApplicantMutation = { __typename?: 'Mutation', saveApplicant: { __typename?: 'ApplicantResponse', codigo: string, nombre: string, apellido_paterno: string, apellido_materno: string, genero: string, ciclo: string, carrera: string, telefono: string, email: string, externo: boolean, desertor: boolean, nivel: string, curso: string } };
+
 export type RegisterMutationVariables = Exact<{
   codigo: Scalars['ID'];
   nombre: Scalars['String'];
@@ -630,6 +685,99 @@ export function useGetLevelsRegisteringLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetLevelsRegisteringQueryHookResult = ReturnType<typeof useGetLevelsRegisteringQuery>;
 export type GetLevelsRegisteringLazyQueryHookResult = ReturnType<typeof useGetLevelsRegisteringLazyQuery>;
 export type GetLevelsRegisteringQueryResult = Apollo.QueryResult<GetLevelsRegisteringQuery, GetLevelsRegisteringQueryVariables>;
+export const GetApplicantForEditDocument = gql`
+    query getApplicantForEdit($codigo: ID!) {
+  applicant(codigo: $codigo) {
+    codigo
+    nombre
+    apellido_paterno
+    apellido_materno
+    genero
+    ciclo
+    carrera
+    telefono
+    email
+    externo
+    desertor
+    nivel
+    curso
+  }
+}
+    `;
+
+/**
+ * __useGetApplicantForEditQuery__
+ *
+ * To run a query within a React component, call `useGetApplicantForEditQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApplicantForEditQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetApplicantForEditQuery({
+ *   variables: {
+ *      codigo: // value for 'codigo'
+ *   },
+ * });
+ */
+export function useGetApplicantForEditQuery(baseOptions: Apollo.QueryHookOptions<GetApplicantForEditQuery, GetApplicantForEditQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetApplicantForEditQuery, GetApplicantForEditQueryVariables>(GetApplicantForEditDocument, options);
+      }
+export function useGetApplicantForEditLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicantForEditQuery, GetApplicantForEditQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetApplicantForEditQuery, GetApplicantForEditQueryVariables>(GetApplicantForEditDocument, options);
+        }
+export type GetApplicantForEditQueryHookResult = ReturnType<typeof useGetApplicantForEditQuery>;
+export type GetApplicantForEditLazyQueryHookResult = ReturnType<typeof useGetApplicantForEditLazyQuery>;
+export type GetApplicantForEditQueryResult = Apollo.QueryResult<GetApplicantForEditQuery, GetApplicantForEditQueryVariables>;
+export const ModifyApplicantDocument = gql`
+    mutation modifyApplicant($codigo: String!, $input: ApplicantInput!) {
+  saveApplicant(codigo: $codigo, input: $input) {
+    codigo
+    nombre
+    apellido_paterno
+    apellido_materno
+    genero
+    ciclo
+    carrera
+    telefono
+    email
+    externo
+    desertor
+    nivel
+    curso
+  }
+}
+    `;
+export type ModifyApplicantMutationFn = Apollo.MutationFunction<ModifyApplicantMutation, ModifyApplicantMutationVariables>;
+
+/**
+ * __useModifyApplicantMutation__
+ *
+ * To run a mutation, you first call `useModifyApplicantMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useModifyApplicantMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [modifyApplicantMutation, { data, loading, error }] = useModifyApplicantMutation({
+ *   variables: {
+ *      codigo: // value for 'codigo'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useModifyApplicantMutation(baseOptions?: Apollo.MutationHookOptions<ModifyApplicantMutation, ModifyApplicantMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ModifyApplicantMutation, ModifyApplicantMutationVariables>(ModifyApplicantDocument, options);
+      }
+export type ModifyApplicantMutationHookResult = ReturnType<typeof useModifyApplicantMutation>;
+export type ModifyApplicantMutationResult = Apollo.MutationResult<ModifyApplicantMutation>;
+export type ModifyApplicantMutationOptions = Apollo.BaseMutationOptions<ModifyApplicantMutation, ModifyApplicantMutationVariables>;
 export const RegisterDocument = gql`
     mutation register($codigo: ID!, $nombre: String!, $apellido_materno: String!, $apellido_paterno: String!, $genero: String!, $carrera: String!, $ciclo: String!, $telefono: String!, $email: String!, $nivel: String!, $curso: String!, $externo: Boolean!, $schedule: String!) {
   registerStudent(

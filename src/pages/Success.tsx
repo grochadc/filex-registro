@@ -1,8 +1,6 @@
-import { RegisterMutation } from "../__generated__/grapqhl-types";
-
-const Success = (props: {
-  mutationResponse: RegisterMutation["registerStudent"] | undefined;
-}) => {
+//import { RegisterMutation } from "../__generated__/grapqhl-types";
+import { MutationResponse } from "../types";
+const Success = (props: { mutationResponse: MutationResponse | undefined }) => {
   const { nombre, schedule } = props.mutationResponse;
   return (
     <div>

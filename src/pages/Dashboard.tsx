@@ -1,5 +1,7 @@
 import * as React from "react";
 import LevelsRegistering from "../components/Dashboard/LevelsRegistering";
+import { ApplicantSelectionForm } from "../components/ApplicantEditor";
+import { useHistory } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 import { gql } from "@apollo/client";
 import {
@@ -23,6 +25,7 @@ export const GET_LEVELS_REGISTERING = gql`
 const Dashboard: React.FC = () => {
   const [savingLevels, setSavingLevels] = React.useState(false);
   const [levelsSaved, setLevelsSaved] = React.useState(false);
+  const history = useHistory();
   const query = useGetLevelsRegisteringQuery();
   const { data } = query;
   const [saveLevels] = useSaveLevelsMutation({
@@ -57,6 +60,10 @@ const Dashboard: React.FC = () => {
       />
       {savingLevels ? <Alert>Saving levels...</Alert> : null}
       {levelsSaved ? <Alert>Levels saved successfully!</Alert> : null}
+      <h2>Edit Applicant:</h2>
+      <ApplicantSelectionForm
+        onSubmit={(codigo) => history.push(`/editApplicant/${codigo}`)}
+      />
     </div>
   );
 };
