@@ -174,7 +174,6 @@ const Selection = (props: { setMutationResponse: any }) => {
         llenos.
       </Alert>
     );
-  if (data) console.log("data", data);
   return (
     <div>
       <h1>Selection</h1>

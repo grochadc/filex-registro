@@ -7,9 +7,7 @@ export const GET_SCHEDULE = gql`
     schedule(id: $id) {
       group
       teacher
-      chat
-      classroom
-      sesiones
+      entry
     }
   }
 `;
