@@ -486,7 +486,7 @@ export type GetScheduleQueryVariables = Exact<{
 }>;
 
 
-export type GetScheduleQuery = { __typename?: 'Query', schedule: { __typename?: 'Schedule', group: string, teacher: string, chat?: Maybe<string>, classroom?: Maybe<string>, sesiones?: Maybe<string> } };
+export type GetScheduleQuery = { __typename?: 'Query', schedule: { __typename?: 'Schedule', group: string, teacher: string, entry: string } };
 
 export type SaveLevelsMutationVariables = Exact<{
   levels: Array<Scalars['String']> | Scalars['String'];
@@ -533,9 +533,7 @@ export const GetScheduleDocument = gql`
   schedule(id: $id) {
     group
     teacher
-    chat
-    classroom
-    sesiones
+    entry
   }
 }
     `;
