@@ -9,20 +9,28 @@ const MockedProviderAny = MockedProvider as any;
 const AllTheProviders = ({
   children,
   mocks,
+  initialEntries,
 }: {
   children: any;
-  mocks: Mock[];
+  mocks: any;
+  initialEntries: string[];
 }) => {
   return (
     <MockedProviderAny mocks={mocks} addTypename={false}>
-      <MemoryRouter initialEntries={["/"]}>{children}</MemoryRouter>
+      <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
     </MockedProviderAny>
   );
 };
 
-const renderWithGql = (ui, mocks: Mock[]) =>
+const renderWithGql = (ui, mocks: any[], initialEntries = ["/"]) =>
   render(ui, {
-    wrapper: (props: any) => <AllTheProviders {...props} mocks={mocks} />,
+    wrapper: (props: any) => (
+      <AllTheProviders
+        {...props}
+        mocks={mocks}
+        initialEntries={initialEntries}
+      />
+    ),
   });
 
 // re-export everything

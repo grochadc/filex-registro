@@ -14,10 +14,12 @@ import {
 import history from "./utils/history";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ServerUri =
+const ServerUri = "https://filex-database.herokuapp.com/"
+/*
   process.env.NODE_ENV === "production" ?
   "https://filex-database.herokuapp.com/" :
   "http://localhost:5000/";
+  */
 
 const clientEnviroment =
   process.env.NODE_ENV === "development" ? "dev" : "prod";

@@ -2,6 +2,9 @@ import { renderWithGql, screen, act } from "./testutils";
 import userEvent from "@testing-library/user-event";
 import apolloMock from "./testutils/generatedMocks";
 import { GET_APPLICANT, REGISTER_STUDENT } from "./pages/Selection";
+import { GET_APPLICANT_FOR_EDIT } from "./pages/EditApplicantPage";
+import { GET_LEVELS_REGISTERING } from "./pages/Dashboard";
+
 import { GraphQLError } from "graphql";
 import App from "./App";
 
@@ -20,6 +23,12 @@ const applicantInfo = {
   externo: false,
   desertor: false,
   schedule: "E4-1",
+};
+
+const waitForServer = async () => {
+  return act(
+    async () => await new Promise((resolve) => setTimeout(resolve, 0))
+  );
 };
 
 describe("Integration", () => {
@@ -187,5 +196,27 @@ describe("Integration", () => {
       async () => await new Promise((resolve) => setTimeout(resolve, 0))
     );
     expect(await screen.findByText(/entryurl.com/i));
+  });
+
+  test("dashboard", async () => {
+    const getLevelsRegisteringMock = apolloMock(GET_LEVELS_REGISTERING, {}, {});
+    renderWithGql(<App />, [getLevelsRegisteringMock], ["/dashboard"]);
+    await waitForServer();
+    expect(screen.getByText(/applicant/i)).toBeInTheDocument();
+  });
+
+  test("edit applicants", async () => {
+    const getApplicantForEditMock = apolloMock(
+      GET_APPLICANT_FOR_EDIT,
+      { codigo: "1234567890" },
+      {}
+    );
+    renderWithGql(
+      <App />,
+      [getApplicantForEditMock],
+      ["/editApplicant/1234567890"]
+    );
+    await waitForServer();
+    expect(screen.getByText(/applicant/i)).toBeInTheDocument();
   });
 });

@@ -3,12 +3,13 @@ import * as React from "react";
 import { Story } from "@storybook/react/types-6-0";
 import LevelsForm, {
   LevelsFormProps,
-} from "../copmonents/Dashboard/LevelsRegistering";
+} from "../components/Dashboard/LevelsRegistering";
 
-export default {
+const normal = {
   title: "LevelsForm",
   component: LevelsForm,
 };
+export default normal;
 
 const Template: Story<LevelsFormProps> = (args) => <LevelsForm {...args} />;
 

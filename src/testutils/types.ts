@@ -1,4 +1,4 @@
-export type Mock<DataType> = {
+export type Mock = {
   request: { query: any; variables?: any };
-  result: { errors?: any[]; data?: DataType };
+  result: { errors?: any[]; data?: any };
 };
