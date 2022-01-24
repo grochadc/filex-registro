@@ -4,8 +4,8 @@ import { Loading, Error } from "../components/utils";
 import {
   useGetApplicantForEditQuery,
   useModifyApplicantMutation,
-} from "../__generated__/grapqhl-types";
-import { ApplicantEditor } from "../components/ApplicantEditor";
+} from "../generated/grapqhl-types";
+import ApplicantEditor from "../components/ApplicantEditor";
 
 export const GET_APPLICANT_FOR_EDIT = gql`
   query getApplicantForEdit($codigo: ID!) {
@@ -48,7 +48,7 @@ export const SAVE_APPLICANT_TO_DB = gql`
 `;
 
 const EditApplicantPage = () => {
-  const params: { code: string } = useParams();
+  const params = useParams();
   const { data, loading, error } = useGetApplicantForEditQuery({
     variables: { codigo: params.code },
   });

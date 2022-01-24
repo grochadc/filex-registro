@@ -7,7 +7,7 @@ import { gql } from "@apollo/client";
 import {
   useGetLevelsRegisteringQuery,
   useSaveLevelsMutation,
-} from "../__generated__/grapqhl-types";
+} from "../generated/grapqhl-types";
 
 export const SAVE_LEVELS_REGISTERING = gql`
   mutation saveLevels($levels: [String!]!, $course: String!) {

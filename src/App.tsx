@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
@@ -7,20 +7,85 @@ import Dashboard from "./pages/Dashboard";
 import Selection from "./pages/Selection";
 import Success from "./pages/Success";
 import EditApplicantPage from "./pages/EditApplicantPage";
+import { gql } from "@apollo/client";
+import { useRegisterStudentMutation } from "./generated/grapqhl-types";
+import { useHistory } from "react-router-dom";
+import { Error } from "./components/utils";
 
 import { MutationResponse } from "./types";
-//import {MutationResponse} from "./__generated__/grapqhl-types";
+
+export const RegisterStudent = gql`
+  mutation RegisterStudent(
+    $codigo: ID!
+    $nombre: String!
+    $apellido_materno: String!
+    $apellido_paterno: String!
+    $genero: String!
+    $carrera: String!
+    $ciclo: String!
+    $telefono: String!
+    $email: String!
+    $nivel: String!
+    $curso: String!
+    $externo: Boolean!
+    $schedule: String!
+  ) {
+    registerStudent(
+      input: {
+        codigo: $codigo
+        nombre: $nombre
+        apellido_materno: $apellido_materno
+        apellido_paterno: $apellido_paterno
+        genero: $genero
+        carrera: $carrera
+        ciclo: $ciclo
+        telefono: $telefono
+        email: $email
+        nivel: $nivel
+        curso: $curso
+        externo: $externo
+        grupo: $schedule
+      }
+    ) {
+      nombre
+      schedule {
+        group
+        teacher
+        entry
+      }
+    }
+  }
+`;
 
 function App() {
-  const initialValues: MutationResponse = {
+  const history = useHistory();
+
+  const [mutationResponse, setMutationResponse] = useState({
     nombre: "",
-    schedule: { group: "", teacher: "", time: "", entry: "" },
+    schedule: { group: "", teacher: "", entry: "" },
+  });
+  const [registerStudent, { error }] = useRegisterStudentMutation();
+
+  const handleSelection = (student) => {
+    const { __typename, institucionalEmail, ...variables } = student;
+    registerStudent({
+      variables,
+      onCompleted: (res) => {
+        setMutationResponse(res);
+        history.push("/success");
+      },
+    });
   };
-  const [mutationResponse, setMutationResponse] = useState(initialValues);
+
+  const handleAlreadyRegistered = (response) => {
+    setMutationResponse(response);
+    history.push("/success");
+  };
+  if (error) return <Error err={error} />;
   return (
     <div>
       <Jumbotron>
-        <h1>FILEX 2021A</h1>
+        <h1>FILEX 2022A</h1>
         <h2>INSCRIPCION</h2>
       </Jumbotron>
       <Container>
@@ -30,7 +95,10 @@ function App() {
             <Link to="/">Elegir otro codigo</Link>
           </Route>
           <Route path="/selection/:code">
-            <Selection setMutationResponse={setMutationResponse} />
+            <Selection
+              submitSelection={handleSelection}
+              onAlreadyRegistered={handleAlreadyRegistered}
+            />
             <Link to="/">Elegir otro codigo</Link>
           </Route>
           <Route path="/dashboard">

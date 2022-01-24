@@ -1,19 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Loading, Error } from "../components/utils";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { Loading, Error } from "../../components/utils";
 import { useParams, useHistory } from "react-router-dom";
 import { gql } from "@apollo/client";
 import {
-  useInfoQuery,
-  useRegisterMutation,
-} from "../__generated__/grapqhl-types";
+  useGetApplicantQuery,
+  useRegisterStudentMutation,
+} from "generated/grapqhl-types";
 
-export const REGISTER_STUDENT = gql`
-  mutation register(
+import ApplicantEditor from "components/ApplicantEditor";
+import ScheduleSelection from "components/ScheduleSelection";
+
+export const RegisterStudent = gql`
+  mutation RegisterStudent(
     $codigo: ID!
     $nombre: String!
     $apellido_materno: String!
@@ -55,8 +54,8 @@ export const REGISTER_STUDENT = gql`
   }
 `;
 
-export const GET_APPLICANT = gql`
-  query info($codigo: ID!) {
+export const GetApplicant = gql`
+  query GetApplicant($codigo: ID!) {
     applicant(codigo: $codigo) {
       codigo
       nombre
@@ -104,55 +103,48 @@ const labels = {
 
 const composeInitialValues = (applicant: any) => {
   if (applicant === undefined) return [[], {}];
-  const {
-    schedules,
-    registering,
-    registeredSchedule,
-    desertor,
-    ...rest
-  } = applicant;
+  const { schedules, registering, registeredSchedule, desertor, ...rest } =
+    applicant;
   return [schedules, rest];
 };
 
-const Selection = (props: { setMutationResponse: any }) => {
+type SelectionProps = {
+  submitSelection: (studentWithSchedule: any) => void;
+  onAlreadyRegistered: (info: { nombre: string; schedule: any }) => void;
+};
+const Selection = (props: SelectionProps) => {
+  const [student, setStudent] = useState({});
+  //@ts-ignore
   const params: { code: string } = useParams();
-  const history = useHistory();
-  const query = useInfoQuery({ variables: { codigo: params.code } });
+  //const history = useHistory();
+  const query = useGetApplicantQuery({ variables: { codigo: params.code } });
   const { data } = query;
-  const [schedules, initialValues] = composeInitialValues(
+
+  const [schedules, initialStudent] = composeInitialValues(
     data && data.applicant
   );
-  const [registerStudent] = useRegisterMutation({
-    onCompleted: (mutationData) => {
-      props.setMutationResponse(mutationData.registerStudent);
-      history.push("/success");
-    },
-  });
-  const handleSubmit = (values: any) => {
-    registerStudent({ variables: values }).catch(console.error);
-  };
 
-  const Schema = Yup.object().shape({
-    schedule: Yup.string().min(4).required("Elige un horario para continuar"),
-  });
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: { ...initialValues, schedule: "" },
-    validationSchema: Schema,
-    onSubmit: handleSubmit,
-  });
+  const [showScheduleSelection, setShowScheduleSelection] = useState(false);
+  const handleSubmit = (values: any) => {
+    setStudent(values);
+    setShowScheduleSelection(true);
+  };
+  const handleScheduleSelect = (index: number) => {
+    props.submitSelection({
+      ...student,
+      schedule: data.applicant.schedules[index].group,
+    });
+  };
   const isInvalidCode = /^[0-9]+$/.test(params.code) ? false : true;
 
   useEffect(() => {
     if (data?.applicant.registeredSchedule) {
-      const resultForSuccess = {
+      props.onAlreadyRegistered({
         nombre: data.applicant.nombre,
         schedule: data.applicant.registeredSchedule,
-      };
-      props.setMutationResponse(resultForSuccess);
-      history.push("/success");
+      });
     }
-  }, [data, history, props]);
+  }, [data, props]);
 
   if (query.loading) return <Loading />;
   if (query.error) {
@@ -176,50 +168,26 @@ const Selection = (props: { setMutationResponse: any }) => {
     );
   return (
     <div>
-      <h1>Selection</h1>
       {data?.applicant.desertor ? (
         <Alert variant="warning">
           Notamos que dertaste el ciclo anterior. Recuerda que solo puedes
           desertar dos veces!
         </Alert>
       ) : null}
-      <Form onSubmit={formik.handleSubmit}>
-        {Object.keys(formik.values).map((el: string, index: any) => {
-          if (["schedule", "nuevo_ingreso", "externo"].includes(el))
-            return null;
-          return (
-            <Form.Group key={index}>
-              <Form.Label>{el}</Form.Label>
-              <Form.Control
-                type="text"
-                value={formik.values[el]}
-                onChange={formik.handleChange}
-                disabled={["codigo", "nivel", "curso"].includes(el)}
-              />
-            </Form.Group>
-          );
-        })}
-        <Form.Group>
-          <Form.Label>Horario Filex:</Form.Label>
-          <Form.Control
-            as="select"
-            id="schedule"
-            value={formik.values.schedule}
-            onChange={formik.handleChange}
-          >
-            <option value="">Elige un horario:</option>
-            {schedules.map((item: any, index: number) => (
-              <option key={index} value={item.group}>
-                {item.serialized}
-              </option>
-            ))}
-          </Form.Control>
-          {formik.errors.schedule && (
-            <Alert variant="warning">{formik.errors.schedule}</Alert>
-          )}
-        </Form.Group>
-        <Button type="submit">Enviar</Button>
-      </Form>
+      {showScheduleSelection ? (
+        <ScheduleSelection
+          schedules={data.applicant.schedules}
+          onScheduleSelect={handleScheduleSelect}
+        />
+      ) : (
+        <ApplicantEditor
+          type="edit"
+          admin={false}
+          heading="Revisa tus datos:"
+          initialValues={initialStudent}
+          onSubmit={handleSubmit}
+        />
+      )}
     </div>
   );
 };

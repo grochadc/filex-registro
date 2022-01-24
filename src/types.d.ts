@@ -21,5 +21,5 @@ export type Action = {
 
 export type MutationResponse = {
   nombre: string;
-  schedule: { group: string; teacher: string; time: string; entry: string };
+  schedule: { group: string; teacher: string; time?: string; entry: string };
 };
