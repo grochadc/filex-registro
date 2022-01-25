@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
@@ -12,8 +12,6 @@ import { useRegisterStudentMutation } from "./generated/grapqhl-types";
 import { useHistory } from "react-router-dom";
 import { Error } from "./components/utils";
 
-import { MutationResponse } from "./types";
-
 export const RegisterStudent = gql`
   mutation RegisterStudent(
     $codigo: ID!
@@ -25,6 +23,7 @@ export const RegisterStudent = gql`
     $ciclo: String!
     $telefono: String!
     $email: String!
+    $institucionalEmail: String
     $nivel: String!
     $curso: String!
     $externo: Boolean!
@@ -41,6 +40,7 @@ export const RegisterStudent = gql`
         ciclo: $ciclo
         telefono: $telefono
         email: $email
+        institucionalEmail: $institucionalEmail
         nivel: $nivel
         curso: $curso
         externo: $externo
@@ -67,7 +67,7 @@ function App() {
   const [registerStudent, { error }] = useRegisterStudentMutation();
 
   const handleSelection = (student) => {
-    const { __typename, institucionalEmail, ...variables } = student;
+    const { __typename, ...variables } = student;
     registerStudent({
       variables,
       onCompleted: (res) => {
