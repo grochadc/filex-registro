@@ -33,11 +33,12 @@ export type Applicant = {
   email: Scalars['String'];
   externo: Scalars['Boolean'];
   genero: Scalars['String'];
-  nivel: Scalars['String'];
+  groups: Array<Group>;
+  institucionalEmail?: Maybe<Scalars['String']>;
+  nivel: Scalars['Int'];
   nombre: Scalars['String'];
-  registeredSchedule?: Maybe<Schedule>;
+  registeredGroup?: Maybe<Group>;
   registering: Scalars['Boolean'];
-  schedules: Array<Schedule>;
   telefono: Scalars['String'];
 };
 
@@ -52,6 +53,7 @@ export type ApplicantInput = {
   email: Scalars['String'];
   externo: Scalars['Boolean'];
   genero: Scalars['String'];
+  institucionalEmail?: InputMaybe<Scalars['String']>;
   nivel: Scalars['String'];
   nombre: Scalars['String'];
   telefono: Scalars['String'];
@@ -69,6 +71,7 @@ export type ApplicantResponse = {
   email: Scalars['String'];
   externo: Scalars['Boolean'];
   genero: Scalars['String'];
+  institucionalEmail?: Maybe<Scalars['String']>;
   nivel: Scalars['String'];
   nombre: Scalars['String'];
   telefono: Scalars['String'];
@@ -97,6 +100,12 @@ export type CloseExamResponse = {
   isClosed: Scalars['Boolean'];
 };
 
+export enum Filter {
+  All = 'ALL',
+  Assigned = 'ASSIGNED',
+  Nonassigned = 'NONASSIGNED'
+}
+
 export type Grades = {
   __typename?: 'Grades';
   apellido_materno: Scalars['String'];
@@ -114,6 +123,16 @@ export type Grades = {
   reading: Scalars['String'];
   situation: Scalars['String'];
   workshops: Scalars['String'];
+};
+
+export type Group = {
+  __typename?: 'Group';
+  aula: Scalars['String'];
+  ciclo: Scalars['String'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  teacher: Scalars['String'];
+  time: Scalars['String'];
 };
 
 export type HomePageMessage = {
@@ -138,7 +157,6 @@ export type MeetLinkInputWithId = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addStudent: Student;
   closeExam?: Maybe<CloseExamResponse>;
   databaseSet: Scalars['Int'];
   editStudent: Student;
@@ -147,6 +165,7 @@ export type Mutation = {
   removeMeetLink: Scalars['Int'];
   resetReservations: Scalars['Boolean'];
   saveApplicant: ApplicantResponse;
+  saveOralResults: Scalars['Boolean'];
   saveRegisteringLevels: Array<Scalars['String']>;
   saveWorkshopsAttendance: Scalars['Boolean'];
   saveWrittenResults: MutationResponse;
@@ -155,11 +174,6 @@ export type Mutation = {
   setPlacementHomePageMessage: Scalars['Boolean'];
   setWorkshopLink: Scalars['Boolean'];
   toggleOpenWorkshops: Scalars['Boolean'];
-};
-
-
-export type MutationAddStudentArgs = {
-  student: StudentInput;
 };
 
 
@@ -182,6 +196,7 @@ export type MutationMakeWorkshopReservationArgs = {
 
 
 export type MutationRegisterStudentArgs = {
+  groupId: Scalars['Int'];
   input: StudentInput;
 };
 
@@ -194,6 +209,11 @@ export type MutationRemoveMeetLinkArgs = {
 export type MutationSaveApplicantArgs = {
   codigo: Scalars['String'];
   input: ApplicantInput;
+};
+
+
+export type MutationSaveOralResultsArgs = {
+  input?: InputMaybe<OralResults>;
 };
 
 
@@ -243,6 +263,7 @@ export type MutationResponse = {
 
 export type Option = {
   __typename?: 'Option';
+  active: Scalars['Boolean'];
   available: Scalars['Boolean'];
   day: Scalars['String'];
   id: Scalars['ID'];
@@ -254,6 +275,12 @@ export type Option = {
   workshop_id: Scalars['String'];
   workshop_name: Scalars['String'];
   zoom_id?: Maybe<Scalars['String']>;
+};
+
+export type OralResults = {
+  id: Scalars['ID'];
+  nivelFinal: Scalars['Int'];
+  nivelOral: Scalars['Int'];
 };
 
 export type PageInfo = {
@@ -274,6 +301,8 @@ export type Query = {
   database?: Maybe<Array<Maybe<Scalars['String']>>>;
   getWorkshopsByCategory: Workshop;
   grades: Grades;
+  group: Group;
+  groups: Array<Group>;
   isClosed: Scalars['Boolean'];
   isWorkshopsOpen: Scalars['Boolean'];
   meetLinks: Array<MeetLink>;
@@ -281,11 +310,11 @@ export type Query = {
   paramQuery?: Maybe<Scalars['Boolean']>;
   placementHomePageMessage: HomePageMessage;
   registeringLevels: Array<Scalars['String']>;
-  schedule: Schedule;
   section: Section;
   student: Student;
   teacher: Teacher;
   teachers: Array<Teacher>;
+  testResults: Array<Maybe<TestResults>>;
   workshops: Array<Workshop>;
 };
 
@@ -310,6 +339,11 @@ export type QueryGradesArgs = {
 };
 
 
+export type QueryGroupArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type QueryParamQueryArgs = {
   param?: InputMaybe<Scalars['String']>;
 };
@@ -317,11 +351,6 @@ export type QueryParamQueryArgs = {
 
 export type QueryRegisteringLevelsArgs = {
   course: Scalars['String'];
-};
-
-
-export type QueryScheduleArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -340,6 +369,11 @@ export type QueryTeacherArgs = {
   id: Scalars['ID'];
 };
 
+
+export type QueryTestResultsArgs = {
+  filter?: InputMaybe<Filter>;
+};
+
 export type Question = {
   __typename?: 'Question';
   options: Array<AnswerOption>;
@@ -355,10 +389,10 @@ export type RegisterResponse = {
   codigo: Scalars['ID'];
   email: Scalars['String'];
   genero: Scalars['String'];
+  group: Group;
   grupo: Scalars['String'];
   nivel: Scalars['String'];
   nombre: Scalars['String'];
-  schedule: Schedule;
   telefono: Scalars['String'];
 };
 
@@ -377,23 +411,6 @@ export type Reservation = {
   tutorial_reason?: Maybe<Scalars['String']>;
   workshop_id: Scalars['String'];
   workshop_name: Scalars['String'];
-};
-
-export type Schedule = {
-  __typename?: 'Schedule';
-  chat?: Maybe<Scalars['String']>;
-  classroom?: Maybe<Scalars['String']>;
-  entry: Scalars['String'];
-  group: Scalars['String'];
-  serialized: Scalars['String'];
-  sesiones?: Maybe<Scalars['String']>;
-  teacher: Scalars['String'];
-  time?: Maybe<Scalars['String']>;
-};
-
-
-export type ScheduleSerializedArgs = {
-  options: SerializedOptions;
 };
 
 export type Section = {
@@ -425,6 +442,8 @@ export type Student = {
   nivel: Scalars['String'];
   nombre: Scalars['String'];
   reservation?: Maybe<StudentReservation>;
+  reservationCount: Scalars['Int'];
+  reservationLimit: Scalars['Int'];
   telefono: Scalars['String'];
 };
 
@@ -445,19 +464,20 @@ export type StudentChangesInput = {
 };
 
 export type StudentInput = {
-  apellido_materno: Scalars['String'];
-  apellido_paterno: Scalars['String'];
-  carrera: Scalars['String'];
+  apellido_materno?: InputMaybe<Scalars['String']>;
+  apellido_paterno?: InputMaybe<Scalars['String']>;
+  carrera?: InputMaybe<Scalars['String']>;
   ciclo: Scalars['String'];
   codigo: Scalars['ID'];
-  curso: Scalars['String'];
-  email: Scalars['String'];
-  externo: Scalars['Boolean'];
-  genero: Scalars['String'];
-  grupo: Scalars['String'];
-  nivel: Scalars['String'];
-  nombre: Scalars['String'];
-  telefono: Scalars['String'];
+  curso?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  externo?: InputMaybe<Scalars['Boolean']>;
+  genero?: InputMaybe<Scalars['String']>;
+  grupo?: InputMaybe<Scalars['String']>;
+  institucionalEmail?: InputMaybe<Scalars['String']>;
+  nivel?: InputMaybe<Scalars['Int']>;
+  nombre?: InputMaybe<Scalars['String']>;
+  telefono?: InputMaybe<Scalars['String']>;
 };
 
 export type StudentReservation = {
@@ -499,6 +519,29 @@ export type TeacherOption = {
   zoom_id?: Maybe<Scalars['String']>;
 };
 
+export type TestResults = {
+  __typename?: 'TestResults';
+  apellidoMaterno: Scalars['String'];
+  apellidoPaterno: Scalars['String'];
+  carrera: Scalars['String'];
+  ciclo: Scalars['String'];
+  codigo: Scalars['String'];
+  curso: Scalars['String'];
+  email: Scalars['String'];
+  externo: Scalars['Boolean'];
+  generated_id: Scalars['String'];
+  genero: Scalars['String'];
+  id: Scalars['ID'];
+  institutionalEmail?: Maybe<Scalars['String']>;
+  meetLink?: Maybe<Scalars['String']>;
+  nivelEscrito: Scalars['Int'];
+  nivelFinal?: Maybe<Scalars['Int']>;
+  nivelOral?: Maybe<Scalars['Int']>;
+  nombre: Scalars['String'];
+  reubicacion: Scalars['Boolean'];
+  telefono: Scalars['String'];
+};
+
 export type Workshop = {
   __typename?: 'Workshop';
   description: Scalars['String'];
@@ -509,8 +552,8 @@ export type Workshop = {
 };
 
 export type WrittenResultsInput = {
-  apellido_materno: Scalars['String'];
-  apellido_paterno: Scalars['String'];
+  apellidoMaterno: Scalars['String'];
+  apellidoPaterno: Scalars['String'];
   carrera: Scalars['String'];
   ciclo: Scalars['String'];
   codigo: Scalars['String'];
@@ -519,7 +562,7 @@ export type WrittenResultsInput = {
   externo: Scalars['Boolean'];
   genero: Scalars['String'];
   institucionalEmail?: InputMaybe<Scalars['String']>;
-  nivel_escrito: Scalars['Int'];
+  nivelEscrito: Scalars['Int'];
   nombre: Scalars['String'];
   reubicacion: Scalars['Boolean'];
   telefono: Scalars['String'];
@@ -540,29 +583,30 @@ export type MeetLink = {
 
 export type RegisterStudentMutationVariables = Exact<{
   codigo: Scalars['ID'];
-  nombre: Scalars['String'];
-  apellido_materno: Scalars['String'];
-  apellido_paterno: Scalars['String'];
-  genero: Scalars['String'];
-  carrera: Scalars['String'];
+  nombre?: InputMaybe<Scalars['String']>;
+  apellido_materno?: InputMaybe<Scalars['String']>;
+  apellido_paterno?: InputMaybe<Scalars['String']>;
+  genero?: InputMaybe<Scalars['String']>;
+  carrera?: InputMaybe<Scalars['String']>;
   ciclo: Scalars['String'];
-  telefono: Scalars['String'];
-  email: Scalars['String'];
-  nivel: Scalars['String'];
-  curso: Scalars['String'];
-  externo: Scalars['Boolean'];
-  schedule: Scalars['String'];
+  telefono?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  institucionalEmail?: InputMaybe<Scalars['String']>;
+  nivel?: InputMaybe<Scalars['Int']>;
+  curso?: InputMaybe<Scalars['String']>;
+  externo?: InputMaybe<Scalars['Boolean']>;
+  groupId: Scalars['Int'];
 }>;
 
 
-export type RegisterStudentMutation = { __typename?: 'Mutation', registerStudent: { __typename?: 'RegisterResponse', nombre: string, schedule: { __typename?: 'Schedule', group: string, teacher: string, entry: string } } };
+export type RegisterStudentMutation = { __typename?: 'Mutation', registerStudent: { __typename?: 'RegisterResponse', nombre: string, group: { __typename?: 'Group', name: string, time: string, aula: string, teacher: string } } };
 
 export type GetScheduleQueryVariables = Exact<{
-  id: Scalars['String'];
+  id: Scalars['Int'];
 }>;
 
 
-export type GetScheduleQuery = { __typename?: 'Query', schedule: { __typename?: 'Schedule', group: string, teacher: string, entry: string } };
+export type GetScheduleQuery = { __typename?: 'Query', group: { __typename?: 'Group', name: string, time: string, aula: string } };
 
 export type SaveLevelsMutationVariables = Exact<{
   levels: Array<Scalars['String']> | Scalars['String'];
@@ -582,7 +626,7 @@ export type GetApplicantForEditQueryVariables = Exact<{
 }>;
 
 
-export type GetApplicantForEditQuery = { __typename?: 'Query', applicant: { __typename?: 'Applicant', codigo: string, nombre: string, apellido_paterno: string, apellido_materno: string, genero: string, ciclo: string, carrera: string, telefono: string, email: string, externo: boolean, desertor: boolean, nivel: string, curso: string } };
+export type GetApplicantForEditQuery = { __typename?: 'Query', applicant: { __typename?: 'Applicant', codigo: string, nombre: string, apellido_paterno: string, apellido_materno: string, genero: string, ciclo: string, carrera: string, telefono: string, email: string, externo: boolean, desertor: boolean, nivel: number, curso: string } };
 
 export type ModifyApplicantMutationVariables = Exact<{
   codigo: Scalars['String'];
@@ -597,19 +641,21 @@ export type GetApplicantQueryVariables = Exact<{
 }>;
 
 
-export type GetApplicantQuery = { __typename?: 'Query', applicant: { __typename?: 'Applicant', codigo: string, nombre: string, apellido_materno: string, apellido_paterno: string, genero: string, carrera: string, ciclo: string, telefono: string, email: string, nivel: string, curso: string, externo: boolean, desertor: boolean, registering: boolean, registeredSchedule?: { __typename?: 'Schedule', teacher: string, group: string, entry: string } | null | undefined, schedules: Array<{ __typename?: 'Schedule', teacher: string, group: string, serialized: string }> } };
+export type GetApplicantQuery = { __typename?: 'Query', applicant: { __typename?: 'Applicant', codigo: string, nombre: string, apellido_materno: string, apellido_paterno: string, genero: string, carrera: string, ciclo: string, telefono: string, email: string, institucionalEmail?: string | null | undefined, nivel: number, curso: string, externo: boolean, desertor: boolean, registering: boolean, registeredGroup?: { __typename?: 'Group', ciclo: string, name: string, time: string, aula: string, teacher: string } | null | undefined, groups: Array<{ __typename?: 'Group', id: number, ciclo: string, name: string, time: string, aula: string, teacher: string }> } };
 
 
 export const RegisterStudentDocument = gql`
-    mutation RegisterStudent($codigo: ID!, $nombre: String!, $apellido_materno: String!, $apellido_paterno: String!, $genero: String!, $carrera: String!, $ciclo: String!, $telefono: String!, $email: String!, $nivel: String!, $curso: String!, $externo: Boolean!, $schedule: String!) {
+    mutation RegisterStudent($codigo: ID!, $nombre: String, $apellido_materno: String, $apellido_paterno: String, $genero: String, $carrera: String, $ciclo: String!, $telefono: String, $email: String, $institucionalEmail: String, $nivel: Int, $curso: String, $externo: Boolean, $groupId: Int!) {
   registerStudent(
-    input: {codigo: $codigo, nombre: $nombre, apellido_materno: $apellido_materno, apellido_paterno: $apellido_paterno, genero: $genero, carrera: $carrera, ciclo: $ciclo, telefono: $telefono, email: $email, nivel: $nivel, curso: $curso, externo: $externo, grupo: $schedule}
+    groupId: $groupId
+    input: {codigo: $codigo, nombre: $nombre, apellido_materno: $apellido_materno, apellido_paterno: $apellido_paterno, genero: $genero, carrera: $carrera, ciclo: $ciclo, telefono: $telefono, email: $email, institucionalEmail: $institucionalEmail, nivel: $nivel, curso: $curso, externo: $externo}
   ) {
     nombre
-    schedule {
-      group
+    group {
+      name
+      time
+      aula
       teacher
-      entry
     }
   }
 }
@@ -638,10 +684,11 @@ export type RegisterStudentMutationFn = Apollo.MutationFunction<RegisterStudentM
  *      ciclo: // value for 'ciclo'
  *      telefono: // value for 'telefono'
  *      email: // value for 'email'
+ *      institucionalEmail: // value for 'institucionalEmail'
  *      nivel: // value for 'nivel'
  *      curso: // value for 'curso'
  *      externo: // value for 'externo'
- *      schedule: // value for 'schedule'
+ *      groupId: // value for 'groupId'
  *   },
  * });
  */
@@ -653,11 +700,11 @@ export type RegisterStudentMutationHookResult = ReturnType<typeof useRegisterStu
 export type RegisterStudentMutationResult = Apollo.MutationResult<RegisterStudentMutation>;
 export type RegisterStudentMutationOptions = Apollo.BaseMutationOptions<RegisterStudentMutation, RegisterStudentMutationVariables>;
 export const GetScheduleDocument = gql`
-    query getSchedule($id: String!) {
-  schedule(id: $id) {
-    group
-    teacher
-    entry
+    query getSchedule($id: Int!) {
+  group(id: $id) {
+    name
+    time
+    aula
   }
 }
     `;
@@ -859,20 +906,26 @@ export const GetApplicantDocument = gql`
     ciclo
     telefono
     email
+    institucionalEmail
     nivel
     curso
     externo
     desertor
     registering
-    registeredSchedule {
+    registeredGroup {
+      ciclo
+      name
+      time
+      aula
       teacher
-      group
-      entry
     }
-    schedules {
+    groups {
+      id
+      ciclo
+      name
+      time
+      aula
       teacher
-      group
-      serialized(options: {teacher: true, group: true})
     }
   }
 }

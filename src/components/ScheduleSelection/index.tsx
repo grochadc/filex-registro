@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
+import { GetApplicantQueryResult } from "../../generated/grapqhl-types";
 
 const Container = styled.div`
   margin-top: 2em;
@@ -11,7 +12,7 @@ const Container = styled.div`
   flex-wrap: wrap;
   align-items: ;
 `;
-const ScheduleContainer = styled.div`
+const ScheduleContainer = styled.div<{ selected: boolean }>`
   border: 1px solid gray;
   border-radius: 15px;
   width: 200px;
@@ -20,6 +21,7 @@ const ScheduleContainer = styled.div`
   padding: 1em;
   margin: 1.5em;
   ${(props) =>
+    //@ts-ignore
     props.selected
       ? `
     color: white;
@@ -32,24 +34,36 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
+type GroupProp = {
+  id: number;
+  ciclo: string;
+  name: string;
+  time: string;
+  aula: string;
+  teacher: string;
+};
 type ScheduleSelectionProps = {
-  schedules: { teacher: string; group: string }[];
+  schedules: GroupProp[];
   onScheduleSelect: (index: any) => void;
 };
 const ScheduleSelection = (props: ScheduleSelectionProps) => {
+  console.log('schedle component props', props)
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
+  if (!props.schedules) return null;
   return (
     <>
       <h1>Selecciona el grupo de tu preferencia:</h1>
       <Container>
         {props.schedules.map((schedule, index) => (
           <ScheduleContainer
-            key={schedule.teacher + schedule.group}
+            key={schedule.teacher + schedule.name}
             selected={selectedOptionIndex === index}
             onClick={() => setSelectedOptionIndex(index)}
           >
-            <h3>{schedule.group}</h3>
+            <h3>{schedule.name}</h3>
             <p>Teacher {schedule.teacher}</p>
+            <p>Aula {schedule.aula}</p>
+            <p>{schedule.time}</p>
           </ScheduleContainer>
         ))}
       </Container>

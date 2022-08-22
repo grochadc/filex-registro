@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
@@ -8,28 +8,33 @@ import Selection from "./pages/Selection";
 import Success from "./pages/Success";
 import EditApplicantPage from "./pages/EditApplicantPage";
 import { gql } from "@apollo/client";
-import { useRegisterStudentMutation } from "./generated/grapqhl-types";
+import {
+  useRegisterStudentMutation,
+  RegisterStudentMutationResult,
+  RegisterStudentMutation,
+} from "./generated/grapqhl-types";
 import { useHistory } from "react-router-dom";
 import { Error } from "./components/utils";
 
 export const RegisterStudent = gql`
   mutation RegisterStudent(
     $codigo: ID!
-    $nombre: String!
-    $apellido_materno: String!
-    $apellido_paterno: String!
-    $genero: String!
-    $carrera: String!
+    $nombre: String
+    $apellido_materno: String
+    $apellido_paterno: String
+    $genero: String
+    $carrera: String
     $ciclo: String!
-    $telefono: String!
-    $email: String!
+    $telefono: String
+    $email: String
     $institucionalEmail: String
-    $nivel: String!
-    $curso: String!
-    $externo: Boolean!
-    $schedule: String!
+    $nivel: Int
+    $curso: String
+    $externo: Boolean
+    $groupId: Int!
   ) {
     registerStudent(
+      groupId: $groupId
       input: {
         codigo: $codigo
         nombre: $nombre
@@ -44,14 +49,14 @@ export const RegisterStudent = gql`
         nivel: $nivel
         curso: $curso
         externo: $externo
-        grupo: $schedule
       }
     ) {
       nombre
-      schedule {
-        group
+      group {
+        name
+        time
+        aula
         teacher
-        entry
       }
     }
   }
@@ -60,10 +65,11 @@ export const RegisterStudent = gql`
 function App() {
   const history = useHistory();
 
-  const [mutationResponse, setMutationResponse] = useState({
+  const [registeredInfo, setRegisteredInfo] = useState({
     nombre: "",
-    schedule: { group: "", teacher: "", entry: "" },
+    group: { name: "", time: "", aula: "", teacher: "" },
   });
+
   const [registerStudent, { error }] = useRegisterStudentMutation();
 
   const handleSelection = (student) => {
@@ -71,14 +77,14 @@ function App() {
     registerStudent({
       variables,
       onCompleted: (res) => {
-        setMutationResponse(res);
+        setRegisteredInfo(res.registerStudent);
         history.push("/success");
       },
     });
   };
 
   const handleAlreadyRegistered = (response) => {
-    setMutationResponse(response);
+    setRegisteredInfo(response);
     history.push("/success");
   };
   if (error) return <Error err={error} />;
@@ -91,7 +97,7 @@ function App() {
       <Container>
         <Switch>
           <Route path="/success">
-            <Success mutationResponse={mutationResponse} />
+            <Success info={registeredInfo} />
             <Link to="/">Elegir otro codigo</Link>
           </Route>
           <Route path="/selection/:code">

@@ -1,36 +1,32 @@
-//import { RegisterMutation } from "../__generated__/grapqhl-types";
-import { MutationResponse } from "../types";
+import React from "react";
+import { RegisterStudentMutation } from "../generated/grapqhl-types";
 
-const response = {
-  data: {
-    registerStudent: {
-      nombre: "RegisterResponse-nombre",
-      schedule: {
-        group: "Schedule-group",
-        teacher: "Schedule-teacher",
-        entry: "Schedule-entry",
-        __typename: "Schedule",
-      },
-      __typename: "RegisterResponse",
-    },
-  },
-};
-const Success = (props: { mutationResponse: MutationResponse | undefined }) => {
+type SuccessProps = {
+  info: {
+    nombre: string;
+    group: {
+      name: string;
+      teacher: string;
+      aula: string;
+      time: string
+    }
+  }
+}
+const Success = (props: SuccessProps) => {
+  const { info } = props;
   return (
     <div>
       <p>
-        <strong>Felicidades {props.mutationResponse?.nombre}!</strong>
+        <strong>Felicidades {info.nombre}!</strong>
       </p>
       <p>
-        Ya estas inscrito en el grupo {props.mutationResponse?.schedule.group}{" "}
-        con el teacher {props.mutationResponse?.schedule.teacher}.
+        Ya estas inscrito en el grupo {info.group.name} con el teacher{" "}
+        {info.group.teacher}.
       </p>
       <div>
-        Aqui tienes el link para contactar a tu maestro:
+        Aqui tienes los datos de tu clase:
         <p>
-          <a href={props.mutationResponse?.schedule.entry}>
-            {props.mutationResponse?.schedule.entry}
-          </a>
+          {info.group.aula}{" "}{info.group.time}
         </p>
       </div>
     </div>

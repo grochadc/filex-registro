@@ -1,5 +1,5 @@
 module.exports = {
-  schema: "http://filex-database.herokuapp.com/",
+  schema: "http://localhost:5000",
   documents: "src/**/!(*.d).{ts,tsx}",
   generates: {
     "./src/testutils/generatedMocks.js": {

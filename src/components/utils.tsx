@@ -3,11 +3,11 @@ import Alert from "react-bootstrap/Alert";
 import { useQuery, gql } from "@apollo/client";
 
 export const GET_SCHEDULE = gql`
-  query getSchedule($id: String!) {
-    schedule(id: $id) {
-      group
-      teacher
-      entry
+  query getSchedule($id: Int!) {
+    group(id: $id) {
+      name
+      time
+      aula
     }
   }
 `;
@@ -21,7 +21,7 @@ export const Error = (props: any) => {
     case "ALREADY_REGISTERED":
       return <Schedule group={props.err.graphQLErrors[0].message} />;
     default:
-      return <div>{JSON.stringify(props.err)}</div>;
+      return <pre>{JSON.stringify(props.err, null, 3)}</pre>;
   }
 };
 

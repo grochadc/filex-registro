@@ -14,18 +14,25 @@ const Template: ComponentStory<typeof ScheduleSelection> = (args) => (
   <ScheduleSelection {...args} />
 );
 
+const createData = (len: number) => {
+  const arr = new Array(len).fill(0);
+  return arr.map((el, i) => {
+    const num = i + 1;
+    return {
+      id: num,
+      teacher: `Nombre-${num}`,
+      name: `E4-${num}`,
+      ciclo: `Ciclo-`,
+      time: `11:00-12:00`,
+      aula: `G${num}`,
+    };
+  });
+};
+
+const schedules = createData(10);
+console.log('schedules', schedules);
+
 export const Normal = Template.bind({});
 Normal.args = {
-  schedules: [
-    { teacher: "Gonzalo", group: "E4-1" },
-    { teacher: "Alondra", group: "E4-2" },
-    { teacher: "Alondra", group: "E4-3" },
-    { teacher: "Alondra", group: "E4-4" },
-    { teacher: "Gonzalo", group: "E4-5" },
-    { teacher: "Gonzalo", group: "E4-6" },
-    { teacher: "Alondra", group: "E4-7" },
-    { teacher: "Alondra", group: "E4-8" },
-    { teacher: "Gonzalo", group: "E4-9" },
-    { teacher: "Gonzalo", group: "E4-10" },
-  ],
+  schedules,
 };

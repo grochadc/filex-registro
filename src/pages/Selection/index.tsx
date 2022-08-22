@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import { Loading, Error } from "../../components/utils";
 import { useParams, useHistory } from "react-router-dom";
 import { gql } from "@apollo/client";
-import { useGetApplicantQuery } from "generated/grapqhl-types";
+import { useGetApplicantQuery } from "../../generated/grapqhl-types";
 
-import ApplicantEditor from "components/ApplicantEditor";
-import ScheduleSelection from "components/ScheduleSelection";
+import ApplicantEditor from "../../components/ApplicantEditor";
+import ScheduleSelection from "../../components/ScheduleSelection";
 
 export const GetApplicant = gql`
   query GetApplicant($codigo: ID!) {
@@ -26,35 +26,24 @@ export const GetApplicant = gql`
       externo
       desertor
       registering
-      registeredSchedule {
+      registeredGroup {
+        ciclo
+        name
+        time
+        aula
         teacher
-        group
-        entry
       }
-      schedules {
+      groups {
+        id
+        ciclo
+        name
+        time
+        aula
         teacher
-        group
-        serialized(options: { teacher: true, group: true })
       }
     }
   }
 `;
-
-/*
-const labels = {
-  codigo: "Codigo:",
-  nombre: "Nombre:",
-  apellido_paterno: "Apellido Paterno:",
-  apellido_materno: "Apellido Materno:",
-  genero: "Genero:",
-  carrera: "Carrera:",
-  ciclo: "Ciclo de Ingreso:",
-  telefono: "Telefono:",
-  email: "Correo Electronico:",
-  nivel: "Nivel:",
-  curso: "Curso:",
-};
-*/
 
 const composeInitialValues = (applicant: any) => {
   if (applicant === undefined) return [[], {}];
@@ -65,21 +54,23 @@ const composeInitialValues = (applicant: any) => {
 
 type SelectionProps = {
   submitSelection: (studentWithSchedule: any) => void;
-  onAlreadyRegistered: (info: { nombre: string; schedule: any }) => void;
+  onAlreadyRegistered: (info: { nombre: string; group: any }) => void;
 };
 const Selection = (props: SelectionProps) => {
   const [student, setStudent] = useState({});
   //@ts-ignore
   const params: { code: string } = useParams();
   //const history = useHistory();
-  const query = useGetApplicantQuery({ variables: { codigo: params.code } });
-  const { data } = query;
+  const query = useGetApplicantQuery({ variables: { codigo: params.code }, onCompleted: (data) => {
 
+  } });
+  const { data } = query;
   const [schedules, initialStudent] = composeInitialValues(
     data && data.applicant
   );
 
   const [showScheduleSelection, setShowScheduleSelection] = useState(false);
+  useEffect(() => {}, [showScheduleSelection]);
   const handleSubmit = (values: any) => {
     setStudent(values);
     setShowScheduleSelection(true);
@@ -87,16 +78,17 @@ const Selection = (props: SelectionProps) => {
   const handleScheduleSelect = (index: number) => {
     props.submitSelection({
       ...student,
-      schedule: data.applicant.schedules[index].group,
+      groupId: data?.applicant.groups[index].id,
     });
   };
   const isInvalidCode = /^[0-9]+$/.test(params.code) ? false : true;
 
   useEffect(() => {
-    if (data?.applicant.registeredSchedule) {
+    if (data?.applicant.registeredGroup) {
+      console.log('found alreadyRegistered', data.applicant.registeredGroup)
       props.onAlreadyRegistered({
         nombre: data.applicant.nombre,
-        schedule: data.applicant.registeredSchedule,
+        group: data.applicant.registeredGroup,
       });
     }
   }, [data, props]);
@@ -114,37 +106,39 @@ const Selection = (props: SelectionProps) => {
         vuelve el dia indicado.
       </Alert>
     );
-  if (schedules.length === 0)
+  if (data && data.applicant.groups.length === 0)
     return (
       <Alert variant="warning">
         Lo sentimos, todos los grupos para nivel {data?.applicant.nivel} estan
         llenos.
       </Alert>
     );
-  return (
-    <div>
-      {data?.applicant.desertor ? (
-        <Alert variant="warning">
-          Notamos que dertaste el ciclo anterior. Recuerda que solo puedes
-          desertar dos veces!
-        </Alert>
-      ) : null}
-      {showScheduleSelection ? (
-        <ScheduleSelection
-          schedules={data.applicant.schedules}
-          onScheduleSelect={handleScheduleSelect}
-        />
-      ) : (
-        <ApplicantEditor
-          type="edit"
-          admin={false}
-          heading="Revisa tus datos:"
-          initialValues={initialStudent}
-          onSubmit={handleSubmit}
-        />
-      )}
-    </div>
-  );
+  if (data)
+    return (
+      <div>
+        {data.applicant.desertor ? (
+          <Alert variant="warning">
+            Notamos que dertaste el ciclo anterior. Recuerda que solo puedes
+            desertar dos veces!
+          </Alert>
+        ) : null}
+        {showScheduleSelection ? (
+          <ScheduleSelection
+            schedules={data.applicant.groups || []}
+            onScheduleSelect={handleScheduleSelect}
+          />
+        ) : (
+          <ApplicantEditor
+            type="edit"
+            admin={false}
+            heading="Revisa tus datos:"
+            initialValues={initialStudent}
+            onSubmit={handleSubmit}
+          />
+        )}
+      </div>
+    );
+  return <>No DATA</>;
 };
 
 export default Selection;

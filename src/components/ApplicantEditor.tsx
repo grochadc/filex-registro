@@ -6,23 +6,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
 
-type Applicant = {
-  codigo: string;
-  nombre: string;
-  apellido_materno: string;
-  apellido_paterno: string;
-  genero: string;
-  carrera: string;
-  ciclo: string;
-  telefono: string;
-  email: string;
-  institucionalEmail: string;
-  nivel: string;
-  curso: string;
-  externo: boolean;
-  desertor: boolean;
-};
-
 const ApplicantSchema = Yup.object().shape({
   codigo: Yup.string().required("Obligatorio"),
   nombre: Yup.string().required("Obligatorio"),
@@ -50,6 +33,7 @@ const ApplicantSchema = Yup.object().shape({
       /[\w\.]*@alumnos.udg.mx/,
       "El correo debe terminar en @alumnos.udg.mx"
     )
+    .nullable()
     .when("externo", {
       is: false,
       then: (schema) => schema.required("Obligatorio"),
@@ -122,7 +106,7 @@ const FlexRow = styled.div`
 `;
 
 type ApplicantEditorProps = {
-  initialValues: Applicant;
+  initialValues: any;
   type: "create" | "edit";
   admin?: boolean;
   heading: string;
@@ -132,7 +116,7 @@ const ApplicantEditor = (props: ApplicantEditorProps) => {
   const handleSubmit = (values) => {
     props.onSubmit(values);
   };
-  const defaultValues: Applicant = {
+  const defaultValues = {
     codigo: "",
     nombre: "",
     apellido_materno: "",
@@ -335,6 +319,7 @@ const ApplicantEditor = (props: ApplicantEditorProps) => {
                   <input
                     id="externo"
                     type="checkbox"
+                    value={formik.values.externo}
                     checked={formik.values.externo}
                     onChange={formik.handleChange}
                   />
@@ -344,6 +329,7 @@ const ApplicantEditor = (props: ApplicantEditorProps) => {
                   <input
                     id="desertor"
                     type="checkbox"
+                    value={formik.values.desertor}
                     checked={formik.values.desertor}
                     onChange={formik.handleChange}
                   />
