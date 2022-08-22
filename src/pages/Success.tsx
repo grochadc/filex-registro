@@ -28,6 +28,8 @@ const Success = (props: SuccessProps) => {
         <p>
           {info.group.aula}{" "}{info.group.time}
         </p>
+        <p>Clases de Lunes a Jueves</p>
+        <p>Inicio de Cursos 5 de Septiembre</p>
       </div>
     </div>
   );
