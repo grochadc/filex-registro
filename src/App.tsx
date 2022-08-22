@@ -91,7 +91,7 @@ function App() {
   return (
     <div>
       <Jumbotron>
-        <h1>FILEX 2022A</h1>
+        <h1>FILEX 2022B</h1>
         <h2>INSCRIPCION</h2>
       </Jumbotron>
       <Container>
