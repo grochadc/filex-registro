@@ -305,6 +305,7 @@ export type Query = {
   groups: Array<Group>;
   isClosed: Scalars['Boolean'];
   isWorkshopsOpen: Scalars['Boolean'];
+  masterlist: Array<Student>;
   meetLinks: Array<MeetLink>;
   options: Array<Option>;
   paramQuery?: Maybe<Scalars['Boolean']>;
@@ -341,6 +342,11 @@ export type QueryGradesArgs = {
 
 export type QueryGroupArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryMasterlistArgs = {
+  ciclo: Scalars['String'];
 };
 
 
@@ -621,6 +627,11 @@ export type GetLevelsRegisteringQueryVariables = Exact<{ [key: string]: never; }
 
 export type GetLevelsRegisteringQuery = { __typename?: 'Query', english: Array<string>, french: Array<string> };
 
+export type GetMasterListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMasterListQuery = { __typename?: 'Query', masterlist: Array<{ __typename?: 'Student', id: string, codigo: string, nombre: string, apellido_paterno: string, apellido_materno: string, genero: string, ciclo: string, carrera: string, externo: boolean, telefono: string, email: string, curso: string, nivel: string, grupo: string }> };
+
 export type GetApplicantForEditQueryVariables = Exact<{
   codigo: Scalars['ID'];
 }>;
@@ -801,6 +812,53 @@ export function useGetLevelsRegisteringLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetLevelsRegisteringQueryHookResult = ReturnType<typeof useGetLevelsRegisteringQuery>;
 export type GetLevelsRegisteringLazyQueryHookResult = ReturnType<typeof useGetLevelsRegisteringLazyQuery>;
 export type GetLevelsRegisteringQueryResult = Apollo.QueryResult<GetLevelsRegisteringQuery, GetLevelsRegisteringQueryVariables>;
+export const GetMasterListDocument = gql`
+    query GetMasterList {
+  masterlist(ciclo: "2022B") {
+    id
+    codigo
+    nombre
+    apellido_paterno
+    apellido_materno
+    genero
+    ciclo
+    carrera
+    externo
+    telefono
+    email
+    curso
+    nivel
+    grupo
+  }
+}
+    `;
+
+/**
+ * __useGetMasterListQuery__
+ *
+ * To run a query within a React component, call `useGetMasterListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMasterListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMasterListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMasterListQuery(baseOptions?: Apollo.QueryHookOptions<GetMasterListQuery, GetMasterListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMasterListQuery, GetMasterListQueryVariables>(GetMasterListDocument, options);
+      }
+export function useGetMasterListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMasterListQuery, GetMasterListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMasterListQuery, GetMasterListQueryVariables>(GetMasterListDocument, options);
+        }
+export type GetMasterListQueryHookResult = ReturnType<typeof useGetMasterListQuery>;
+export type GetMasterListLazyQueryHookResult = ReturnType<typeof useGetMasterListLazyQuery>;
+export type GetMasterListQueryResult = Apollo.QueryResult<GetMasterListQuery, GetMasterListQueryVariables>;
 export const GetApplicantForEditDocument = gql`
     query getApplicantForEdit($codigo: ID!) {
   applicant(codigo: $codigo) {

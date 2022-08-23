@@ -7,7 +7,10 @@ import { gql } from "@apollo/client";
 import {
   useGetLevelsRegisteringQuery,
   useSaveLevelsMutation,
+  useGetMasterListLazyQuery,
 } from "../generated/grapqhl-types";
+
+import { downloadMasterList } from "../utils";
 
 export const SAVE_LEVELS_REGISTERING = gql`
   mutation saveLevels($levels: [String!]!, $course: String!) {
@@ -22,7 +25,33 @@ export const GET_LEVELS_REGISTERING = gql`
   }
 `;
 
+export const GET_MASTERLIST = gql`
+  query GetMasterList {
+    masterlist(ciclo: "2022B") {
+      id
+      codigo
+      nombre
+      apellido_paterno
+      apellido_materno
+      genero
+      ciclo
+      carrera
+      externo
+      telefono
+      email
+      curso
+      nivel
+      grupo
+    }
+  }
+`;
+
 const Dashboard: React.FC = () => {
+  const [getMasterList] = useGetMasterListLazyQuery({
+    onCompleted: ({ masterlist }) => {
+      downloadMasterList(masterlist, 'masterlist2022B')
+    },
+  });
   const [savingLevels, setSavingLevels] = React.useState(false);
   const [levelsSaved, setLevelsSaved] = React.useState(false);
   const history = useHistory();
@@ -48,6 +77,7 @@ const Dashboard: React.FC = () => {
   return (
     <div>
       <h1>Settings</h1>
+      <button className="border border-black rounded m-2 p-2" onClick={() => getMasterList()}>Descargar Masterlist</button>
       <LevelsRegistering
         registering={data?.english!}
         course="en"
