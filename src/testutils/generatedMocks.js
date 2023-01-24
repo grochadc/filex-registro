@@ -30,13 +30,14 @@ operations.RegisterStudent.data = (values = {}, options = {}) => {
         nombre: (values.nombre === null || values.nombre === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nombre', __typename, scalarValues: options.scalarValues }) : values.nombre,
         group: ((values = {}, options = {}) => {
           const __typename = 'Group';
-          values = (({ name = null, time = null, aula = null, teacher = null }) => ({ name, time, aula, teacher }))(values);
+          values = (({ name = null, time = null, aula = null, teacher = null, message = null }) => ({ name, time, aula, teacher, message }))(values);
           values.__typename = __typename;
           return {
             name: (values.name === null || values.name === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'name', __typename, scalarValues: options.scalarValues }) : values.name,
             time: (values.time === null || values.time === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'time', __typename, scalarValues: options.scalarValues }) : values.time,
             aula: (values.aula === null || values.aula === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'aula', __typename, scalarValues: options.scalarValues }) : values.aula,
             teacher: (values.teacher === null || values.teacher === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'teacher', __typename, scalarValues: options.scalarValues }) : values.teacher,
+            message: values.message,
             ...(options.addTypename ? { __typename } : {})
           };
         })(values.group || undefined, options),

@@ -40,6 +40,7 @@ export const RegisterStudent = gql`
         time
         aula
         teacher
+        message
       }
     }
   }
@@ -48,7 +49,7 @@ export const RegisterStudent = gql`
 function App() {
   const history = useHistory();
 
-  const [registeredInfo, setRegisteredInfo] = useState({
+  const [registeredInfo, setRegisteredInfo] = useState<RegisterStudentMutation["registerStudent"]>({
     nombre: "",
     group: { name: "", time: "", aula: "", teacher: "" },
   });

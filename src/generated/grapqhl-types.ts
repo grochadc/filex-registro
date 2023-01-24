@@ -92,6 +92,7 @@ export type Group = {
   aula: Scalars['String'];
   ciclo: Scalars['String'];
   id: Scalars['ID'];
+  message?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   teacher: Scalars['String'];
   time: Scalars['String'];
@@ -385,7 +386,7 @@ export type RegisterStudentMutationVariables = Exact<{
 }>;
 
 
-export type RegisterStudentMutation = { __typename?: 'Mutation', registerStudent: { __typename?: 'RegisterResponse', nombre: string, group: { __typename?: 'Group', name: string, time: string, aula: string, teacher: string } } };
+export type RegisterStudentMutation = { __typename?: 'Mutation', registerStudent: { __typename?: 'RegisterResponse', nombre: string, group: { __typename?: 'Group', name: string, time: string, aula: string, teacher: string, message?: string | null | undefined } } };
 
 export type GetScheduleQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -432,6 +433,7 @@ export const RegisterStudentDocument = gql`
       time
       aula
       teacher
+      message
     }
   }
 }
