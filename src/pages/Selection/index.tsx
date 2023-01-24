@@ -3,29 +3,33 @@ import Alert from "react-bootstrap/Alert";
 import { Loading, Error } from "../../components/utils";
 import { useParams, useHistory } from "react-router-dom";
 import { gql } from "@apollo/client";
-import { useGetApplicantQuery } from "../../generated/grapqhl-types";
+import {
+  UnenrolledStudent,
+  useGetApplicantQuery,
+  GetApplicantQuery,
+} from "../../generated/grapqhl-types";
 
 import ApplicantEditor from "../../components/ApplicantEditor";
 import ScheduleSelection from "../../components/ScheduleSelection";
 
 export const GetApplicant = gql`
   query GetApplicant($codigo: ID!) {
-    applicant(codigo: $codigo) {
+    unenrolledStudent(codigo: $codigo) {
       codigo
       nombre
       apellido_materno
       apellido_paterno
       genero
       carrera
-      ciclo
+      cicloIngreso
       telefono
       email
       institucionalEmail
       nivel
       curso
       externo
-      desertor
       registering
+      desertor
       registeredGroup {
         ciclo
         name
@@ -45,50 +49,67 @@ export const GetApplicant = gql`
   }
 `;
 
-const composeInitialValues = (applicant: any) => {
-  if (applicant === undefined) return [[], {}];
-  const { schedules, registering, registeredSchedule, desertor, ...rest } =
-    applicant;
-  return [schedules, rest];
-};
-
 type SelectionProps = {
   submitSelection: (studentWithSchedule: any) => void;
   onAlreadyRegistered: (info: { nombre: string; group: any }) => void;
 };
 const Selection = (props: SelectionProps) => {
-  const [student, setStudent] = useState({});
+  const [student, setStudent] = useState<
+    GetApplicantQuery["unenrolledStudent"]
+  >();
+
+  const [groups, setGroups] = useState<
+    GetApplicantQuery["unenrolledStudent"]["groups"]
+  >([]);
+
+  const [groupSelection, setGroupSelection] = useState("");
+
   //@ts-ignore
   const params: { code: string } = useParams();
   //const history = useHistory();
-  const query = useGetApplicantQuery({ variables: { codigo: params.code }, onCompleted: (data) => {
-
-  } });
+  const query = useGetApplicantQuery({
+    variables: { codigo: params.code },
+    onCompleted: (data) => {
+      if (data?.unenrolledStudent !== undefined) {
+        setStudent(data.unenrolledStudent);
+        setGroups(data.unenrolledStudent.groups);
+      }
+    },
+  });
   const { data } = query;
-  const [schedules, initialStudent] = composeInitialValues(
-    data && data.applicant
-  );
 
   const [showScheduleSelection, setShowScheduleSelection] = useState(false);
   useEffect(() => {}, [showScheduleSelection]);
-  const handleSubmit = (values: any) => {
-    setStudent(values);
+
+  const handleApplicantEditorSubmit = (values: any) => {
+    setStudent({ ...student, ...values });
     setShowScheduleSelection(true);
   };
+
   const handleScheduleSelect = (index: number) => {
-    props.submitSelection({
-      ...student,
-      groupId: data?.applicant.groups[index].id,
-    });
+    const selectedGroup = groups[index];
+
+    if (selectedGroup !== null && selectedGroup !== undefined) {
+      props.submitSelection({
+        codigo: student?.codigo,
+        nivel: student?.nivel,
+        curso: student?.curso,
+        group: selectedGroup.name,
+        groupId: selectedGroup.id, 
+      });
+    }
   };
   const isInvalidCode = /^[0-9]+$/.test(params.code) ? false : true;
 
   useEffect(() => {
-    if (data?.applicant.registeredGroup) {
-      console.log('found alreadyRegistered', data.applicant.registeredGroup)
+    if (data?.unenrolledStudent.registeredGroup) {
+      console.log(
+        "found alreadyRegistered",
+        data.unenrolledStudent.registeredGroup
+      );
       props.onAlreadyRegistered({
-        nombre: data.applicant.nombre,
-        group: data.applicant.registeredGroup,
+        nombre: data.unenrolledStudent.nombre,
+        group: data.unenrolledStudent.registeredGroup,
       });
     }
   }, [data, props]);
@@ -99,24 +120,24 @@ const Selection = (props: SelectionProps) => {
   }
   if (isInvalidCode)
     return <Alert variant="danger">Ese no es un codigo valido.</Alert>;
-  if (data && !data.applicant.registering)
+  if (data && !data.unenrolledStudent.registering)
     return (
       <Alert variant="warning">
-        Hoy no es dia de registro para nivel {data.applicant.nivel}. Por favor
-        vuelve el dia indicado.
+        Hoy no es dia de registro para nivel {data.unenrolledStudent.nivel}. Por
+        favor vuelve el dia indicado.
       </Alert>
     );
-  if (data && data.applicant.groups.length === 0)
+  if (data && data.unenrolledStudent.groups.length === 0)
     return (
       <Alert variant="warning">
-        Lo sentimos, todos los grupos para nivel {data?.applicant.nivel} estan
-        llenos.
+        Lo sentimos, todos los grupos para nivel {data?.unenrolledStudent.nivel}{" "}
+        estan llenos.
       </Alert>
     );
-  if (data)
+  if (student)
     return (
       <div>
-        {data.applicant.desertor ? (
+        {student.desertor ? (
           <Alert variant="warning">
             Notamos que dertaste el ciclo anterior. Recuerda que solo puedes
             desertar dos veces!
@@ -124,7 +145,7 @@ const Selection = (props: SelectionProps) => {
         ) : null}
         {showScheduleSelection ? (
           <ScheduleSelection
-            schedules={data.applicant.groups || []}
+            schedules={groups}
             onScheduleSelect={handleScheduleSelect}
           />
         ) : (
@@ -132,8 +153,8 @@ const Selection = (props: SelectionProps) => {
             type="edit"
             admin={false}
             heading="Revisa tus datos:"
-            initialValues={initialStudent}
-            onSubmit={handleSubmit}
+            initialValues={student}
+            onSubmit={handleApplicantEditorSubmit}
           />
         )}
       </div>

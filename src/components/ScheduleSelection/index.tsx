@@ -35,13 +35,13 @@ const ButtonContainer = styled.div`
 `;
 
 type GroupProp = {
-  id: number;
+  id: string;
   ciclo: string;
   name: string;
   time: string;
   aula: string;
   teacher: string;
-};
+} | undefined | null;
 type ScheduleSelectionProps = {
   schedules: GroupProp[];
   onScheduleSelect: (index: any) => void;
@@ -49,21 +49,21 @@ type ScheduleSelectionProps = {
 const ScheduleSelection = (props: ScheduleSelectionProps) => {
   console.log('schedle component props', props)
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
-  if (!props.schedules) return null;
+  if (!props.schedules.length) return null;
   return (
     <>
       <h1>Selecciona el grupo de tu preferencia:</h1>
       <Container>
         {props.schedules.map((schedule, index) => (
           <ScheduleContainer
-            key={schedule.teacher + schedule.name}
+            key={schedule?.teacher ? schedule.teacher + schedule?.name : schedule?.name}
             selected={selectedOptionIndex === index}
             onClick={() => setSelectedOptionIndex(index)}
           >
-            <h3>{schedule.name}</h3>
-            <p>Teacher {schedule.teacher}</p>
-            <p>Aula {schedule.aula}</p>
-            <p>{schedule.time}</p>
+            <h3>{schedule?.name}</h3>
+            <p>Teacher {schedule?.teacher}</p>
+            <p>Aula {schedule?.aula}</p>
+            <p>{schedule?.time}</p>
           </ScheduleContainer>
         ))}
       </Container>

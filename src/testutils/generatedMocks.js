@@ -7,23 +7,14 @@ export default createApolloMock(operations);
 operations.RegisterStudent = {};
 operations.RegisterStudent.variables = (values = {}, options = {}) => {
   const __typename = '';
-  values = (({ codigo = undefined, nombre = undefined, apellido_materno = undefined, apellido_paterno = undefined, genero = undefined, carrera = undefined, ciclo = undefined, telefono = undefined, email = undefined, institucionalEmail = undefined, nivel = undefined, curso = undefined, externo = undefined, groupId = undefined }) => ({ codigo, nombre, apellido_materno, apellido_paterno, genero, carrera, ciclo, telefono, email, institucionalEmail, nivel, curso, externo, groupId }))(values);
+  values = (({ codigo = undefined, nivel = undefined, curso = undefined, groupId = undefined, group = undefined }) => ({ codigo, nivel, curso, groupId, group }))(values);
   values.__typename = __typename;
   return {
     codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
-    nombre: values.nombre,
-    apellido_materno: values.apellido_materno,
-    apellido_paterno: values.apellido_paterno,
-    genero: values.genero,
-    carrera: values.carrera,
-    ciclo: (values.ciclo === null || values.ciclo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'ciclo', __typename, scalarValues: options.scalarValues }) : values.ciclo,
-    telefono: values.telefono,
-    email: values.email,
-    institucionalEmail: values.institucionalEmail,
-    nivel: values.nivel,
-    curso: values.curso,
-    externo: values.externo,
-    groupId: (values.groupId === null || values.groupId === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Int', mappedTypeName: 'number', fieldName: 'groupId', __typename, scalarValues: options.scalarValues }) : values.groupId
+    nivel: (values.nivel === null || values.nivel === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Int', mappedTypeName: 'number', fieldName: 'nivel', __typename, scalarValues: options.scalarValues }) : values.nivel,
+    curso: (values.curso === null || values.curso === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'curso', __typename, scalarValues: options.scalarValues }) : values.curso,
+    groupId: (values.groupId === null || values.groupId === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'groupId', __typename, scalarValues: options.scalarValues }) : values.groupId,
+    group: (values.group === null || values.group === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'group', __typename, scalarValues: options.scalarValues }) : values.group
   };
 };
 operations.RegisterStudent.data = (values = {}, options = {}) => {
@@ -61,7 +52,7 @@ operations.getSchedule.variables = (values = {}, options = {}) => {
   values = (({ id = undefined }) => ({ id }))(values);
   values.__typename = __typename;
   return {
-    id: (values.id === null || values.id === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Int', mappedTypeName: 'number', fieldName: 'id', __typename, scalarValues: options.scalarValues }) : values.id
+    id: (values.id === null || values.id === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'id', __typename, scalarValues: options.scalarValues }) : values.id
   };
 };
 operations.getSchedule.data = (values = {}, options = {}) => {
@@ -136,12 +127,11 @@ operations.GetMasterList.data = (values = {}, options = {}) => {
   values.__typename = __typename;
   return {
     masterlist: (values.masterlist || []).map(item => ((values = {}, options = {}) => {
-      const __typename = 'Student';
-      values = (({ id = null, codigo = null, nombre = null, apellido_paterno = null, apellido_materno = null, genero = null, ciclo = null, carrera = null, externo = null, telefono = null, email = null, curso = null, nivel = null, grupo = null }) => ({ id, codigo, nombre, apellido_paterno, apellido_materno, genero, ciclo, carrera, externo, telefono, email, curso, nivel, grupo }))(values);
+      const __typename = 'EnrolledStudent';
+      values = (({ codigo = null, nombre = null, apellido_paterno = null, apellido_materno = null, genero = null, ciclo = null, carrera = null, externo = null, telefono = null, email = null, curso = null, nivel = null, group = null }) => ({ codigo, nombre, apellido_paterno, apellido_materno, genero, ciclo, carrera, externo, telefono, email, curso, nivel, group }))(values);
       values.__typename = __typename;
       return {
-        id: (values.id === null || values.id === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'id', __typename, scalarValues: options.scalarValues }) : values.id,
-        codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
+        codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
         nombre: (values.nombre === null || values.nombre === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nombre', __typename, scalarValues: options.scalarValues }) : values.nombre,
         apellido_paterno: (values.apellido_paterno === null || values.apellido_paterno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_paterno', __typename, scalarValues: options.scalarValues }) : values.apellido_paterno,
         apellido_materno: (values.apellido_materno === null || values.apellido_materno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_materno', __typename, scalarValues: options.scalarValues }) : values.apellido_materno,
@@ -153,87 +143,18 @@ operations.GetMasterList.data = (values = {}, options = {}) => {
         email: (values.email === null || values.email === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'email', __typename, scalarValues: options.scalarValues }) : values.email,
         curso: (values.curso === null || values.curso === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'curso', __typename, scalarValues: options.scalarValues }) : values.curso,
         nivel: (values.nivel === null || values.nivel === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nivel', __typename, scalarValues: options.scalarValues }) : values.nivel,
-        grupo: (values.grupo === null || values.grupo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'grupo', __typename, scalarValues: options.scalarValues }) : values.grupo,
+        group: ((values = {}, options = {}) => {
+          const __typename = 'Group';
+          values = (({ name = null }) => ({ name }))(values);
+          values.__typename = __typename;
+          return {
+            name: (values.name === null || values.name === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'name', __typename, scalarValues: options.scalarValues }) : values.name,
+            ...(options.addTypename ? { __typename } : {})
+          };
+        })(values.group || undefined, options),
         ...(options.addTypename ? { __typename } : {})
       };
     })(item, options))
-  };
-};
-
-operations.getApplicantForEdit = {};
-operations.getApplicantForEdit.variables = (values = {}, options = {}) => {
-  const __typename = '';
-  values = (({ codigo = undefined }) => ({ codigo }))(values);
-  values.__typename = __typename;
-  return {
-    codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo
-  };
-};
-operations.getApplicantForEdit.data = (values = {}, options = {}) => {
-  const __typename = '';
-  values = (({ applicant = null }) => ({ applicant }))(values);
-  values.__typename = __typename;
-  return {
-    applicant: ((values = {}, options = {}) => {
-      const __typename = 'Applicant';
-      values = (({ codigo = null, nombre = null, apellido_paterno = null, apellido_materno = null, genero = null, ciclo = null, carrera = null, telefono = null, email = null, externo = null, desertor = null, nivel = null, curso = null }) => ({ codigo, nombre, apellido_paterno, apellido_materno, genero, ciclo, carrera, telefono, email, externo, desertor, nivel, curso }))(values);
-      values.__typename = __typename;
-      return {
-        codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
-        nombre: (values.nombre === null || values.nombre === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nombre', __typename, scalarValues: options.scalarValues }) : values.nombre,
-        apellido_paterno: (values.apellido_paterno === null || values.apellido_paterno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_paterno', __typename, scalarValues: options.scalarValues }) : values.apellido_paterno,
-        apellido_materno: (values.apellido_materno === null || values.apellido_materno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_materno', __typename, scalarValues: options.scalarValues }) : values.apellido_materno,
-        genero: (values.genero === null || values.genero === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'genero', __typename, scalarValues: options.scalarValues }) : values.genero,
-        ciclo: (values.ciclo === null || values.ciclo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'ciclo', __typename, scalarValues: options.scalarValues }) : values.ciclo,
-        carrera: (values.carrera === null || values.carrera === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'carrera', __typename, scalarValues: options.scalarValues }) : values.carrera,
-        telefono: (values.telefono === null || values.telefono === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'telefono', __typename, scalarValues: options.scalarValues }) : values.telefono,
-        email: (values.email === null || values.email === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'email', __typename, scalarValues: options.scalarValues }) : values.email,
-        externo: (values.externo === null || values.externo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'externo', __typename, scalarValues: options.scalarValues }) : values.externo,
-        desertor: (values.desertor === null || values.desertor === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'desertor', __typename, scalarValues: options.scalarValues }) : values.desertor,
-        nivel: (values.nivel === null || values.nivel === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Int', mappedTypeName: 'number', fieldName: 'nivel', __typename, scalarValues: options.scalarValues }) : values.nivel,
-        curso: (values.curso === null || values.curso === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'curso', __typename, scalarValues: options.scalarValues }) : values.curso,
-        ...(options.addTypename ? { __typename } : {})
-      };
-    })(values.applicant || undefined, options)
-  };
-};
-
-operations.modifyApplicant = {};
-operations.modifyApplicant.variables = (values = {}, options = {}) => {
-  const __typename = '';
-  values = (({ codigo = undefined, input = undefined }) => ({ codigo, input }))(values);
-  values.__typename = __typename;
-  return {
-    codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
-    input: (ApplicantInput)(values.input || undefined, options)
-  };
-};
-operations.modifyApplicant.data = (values = {}, options = {}) => {
-  const __typename = '';
-  values = (({ saveApplicant = null }) => ({ saveApplicant }))(values);
-  values.__typename = __typename;
-  return {
-    saveApplicant: ((values = {}, options = {}) => {
-      const __typename = 'ApplicantResponse';
-      values = (({ codigo = null, nombre = null, apellido_paterno = null, apellido_materno = null, genero = null, ciclo = null, carrera = null, telefono = null, email = null, externo = null, desertor = null, nivel = null, curso = null }) => ({ codigo, nombre, apellido_paterno, apellido_materno, genero, ciclo, carrera, telefono, email, externo, desertor, nivel, curso }))(values);
-      values.__typename = __typename;
-      return {
-        codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
-        nombre: (values.nombre === null || values.nombre === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nombre', __typename, scalarValues: options.scalarValues }) : values.nombre,
-        apellido_paterno: (values.apellido_paterno === null || values.apellido_paterno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_paterno', __typename, scalarValues: options.scalarValues }) : values.apellido_paterno,
-        apellido_materno: (values.apellido_materno === null || values.apellido_materno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_materno', __typename, scalarValues: options.scalarValues }) : values.apellido_materno,
-        genero: (values.genero === null || values.genero === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'genero', __typename, scalarValues: options.scalarValues }) : values.genero,
-        ciclo: (values.ciclo === null || values.ciclo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'ciclo', __typename, scalarValues: options.scalarValues }) : values.ciclo,
-        carrera: (values.carrera === null || values.carrera === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'carrera', __typename, scalarValues: options.scalarValues }) : values.carrera,
-        telefono: (values.telefono === null || values.telefono === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'telefono', __typename, scalarValues: options.scalarValues }) : values.telefono,
-        email: (values.email === null || values.email === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'email', __typename, scalarValues: options.scalarValues }) : values.email,
-        externo: (values.externo === null || values.externo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'externo', __typename, scalarValues: options.scalarValues }) : values.externo,
-        desertor: (values.desertor === null || values.desertor === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'desertor', __typename, scalarValues: options.scalarValues }) : values.desertor,
-        nivel: (values.nivel === null || values.nivel === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nivel', __typename, scalarValues: options.scalarValues }) : values.nivel,
-        curso: (values.curso === null || values.curso === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'curso', __typename, scalarValues: options.scalarValues }) : values.curso,
-        ...(options.addTypename ? { __typename } : {})
-      };
-    })(values.saveApplicant || undefined, options)
   };
 };
 
@@ -248,12 +169,12 @@ operations.GetApplicant.variables = (values = {}, options = {}) => {
 };
 operations.GetApplicant.data = (values = {}, options = {}) => {
   const __typename = '';
-  values = (({ applicant = null }) => ({ applicant }))(values);
+  values = (({ unenrolledStudent = null }) => ({ unenrolledStudent }))(values);
   values.__typename = __typename;
   return {
-    applicant: ((values = {}, options = {}) => {
-      const __typename = 'Applicant';
-      values = (({ codigo = null, nombre = null, apellido_materno = null, apellido_paterno = null, genero = null, carrera = null, ciclo = null, telefono = null, email = null, institucionalEmail = null, nivel = null, curso = null, externo = null, desertor = null, registering = null, registeredGroup = null, groups = null }) => ({ codigo, nombre, apellido_materno, apellido_paterno, genero, carrera, ciclo, telefono, email, institucionalEmail, nivel, curso, externo, desertor, registering, registeredGroup, groups }))(values);
+    unenrolledStudent: ((values = {}, options = {}) => {
+      const __typename = 'UnenrolledStudent';
+      values = (({ codigo = null, nombre = null, apellido_materno = null, apellido_paterno = null, genero = null, carrera = null, cicloIngreso = null, telefono = null, email = null, institucionalEmail = null, nivel = null, curso = null, externo = null, registering = null, desertor = null, registeredGroup = null, groups = null }) => ({ codigo, nombre, apellido_materno, apellido_paterno, genero, carrera, cicloIngreso, telefono, email, institucionalEmail, nivel, curso, externo, registering, desertor, registeredGroup, groups }))(values);
       values.__typename = __typename;
       return {
         codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
@@ -262,15 +183,15 @@ operations.GetApplicant.data = (values = {}, options = {}) => {
         apellido_paterno: (values.apellido_paterno === null || values.apellido_paterno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_paterno', __typename, scalarValues: options.scalarValues }) : values.apellido_paterno,
         genero: (values.genero === null || values.genero === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'genero', __typename, scalarValues: options.scalarValues }) : values.genero,
         carrera: (values.carrera === null || values.carrera === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'carrera', __typename, scalarValues: options.scalarValues }) : values.carrera,
-        ciclo: (values.ciclo === null || values.ciclo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'ciclo', __typename, scalarValues: options.scalarValues }) : values.ciclo,
+        cicloIngreso: (values.cicloIngreso === null || values.cicloIngreso === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'cicloIngreso', __typename, scalarValues: options.scalarValues }) : values.cicloIngreso,
         telefono: (values.telefono === null || values.telefono === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'telefono', __typename, scalarValues: options.scalarValues }) : values.telefono,
         email: (values.email === null || values.email === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'email', __typename, scalarValues: options.scalarValues }) : values.email,
         institucionalEmail: values.institucionalEmail,
         nivel: (values.nivel === null || values.nivel === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Int', mappedTypeName: 'number', fieldName: 'nivel', __typename, scalarValues: options.scalarValues }) : values.nivel,
         curso: (values.curso === null || values.curso === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'curso', __typename, scalarValues: options.scalarValues }) : values.curso,
         externo: (values.externo === null || values.externo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'externo', __typename, scalarValues: options.scalarValues }) : values.externo,
-        desertor: (values.desertor === null || values.desertor === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'desertor', __typename, scalarValues: options.scalarValues }) : values.desertor,
         registering: (values.registering === null || values.registering === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'registering', __typename, scalarValues: options.scalarValues }) : values.registering,
+        desertor: values.desertor,
         registeredGroup: !values.registeredGroup ? values.registeredGroup : ((values = {}, options = {}) => {
           const __typename = 'Group';
           values = (({ ciclo = null, name = null, time = null, aula = null, teacher = null }) => ({ ciclo, name, time, aula, teacher }))(values);
@@ -289,7 +210,7 @@ operations.GetApplicant.data = (values = {}, options = {}) => {
           values = (({ id = null, ciclo = null, name = null, time = null, aula = null, teacher = null }) => ({ id, ciclo, name, time, aula, teacher }))(values);
           values.__typename = __typename;
           return {
-            id: (values.id === null || values.id === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Int', mappedTypeName: 'number', fieldName: 'id', __typename, scalarValues: options.scalarValues }) : values.id,
+            id: (values.id === null || values.id === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'id', __typename, scalarValues: options.scalarValues }) : values.id,
             ciclo: (values.ciclo === null || values.ciclo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'ciclo', __typename, scalarValues: options.scalarValues }) : values.ciclo,
             name: (values.name === null || values.name === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'name', __typename, scalarValues: options.scalarValues }) : values.name,
             time: (values.time === null || values.time === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'time', __typename, scalarValues: options.scalarValues }) : values.time,
@@ -300,28 +221,6 @@ operations.GetApplicant.data = (values = {}, options = {}) => {
         })(item, options)),
         ...(options.addTypename ? { __typename } : {})
       };
-    })(values.applicant || undefined, options)
-  };
-};
-
-const ApplicantInput = (values = {}, options = {}) => {
-  const __typename = 'ApplicantInput';
-  values = (({ apellido_materno = undefined, apellido_paterno = undefined, carrera = undefined, ciclo = undefined, codigo = undefined, curso = undefined, desertor = undefined, email = undefined, externo = undefined, genero = undefined, institucionalEmail = undefined, nivel = undefined, nombre = undefined, telefono = undefined }) => ({ apellido_materno, apellido_paterno, carrera, ciclo, codigo, curso, desertor, email, externo, genero, institucionalEmail, nivel, nombre, telefono }))(values);
-  values.__typename = __typename;
-  return {
-    apellido_materno: (values.apellido_materno === null || values.apellido_materno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_materno', __typename, scalarValues: options.scalarValues }) : values.apellido_materno,
-    apellido_paterno: (values.apellido_paterno === null || values.apellido_paterno === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'apellido_paterno', __typename, scalarValues: options.scalarValues }) : values.apellido_paterno,
-    carrera: (values.carrera === null || values.carrera === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'carrera', __typename, scalarValues: options.scalarValues }) : values.carrera,
-    ciclo: (values.ciclo === null || values.ciclo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'ciclo', __typename, scalarValues: options.scalarValues }) : values.ciclo,
-    codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
-    curso: (values.curso === null || values.curso === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'curso', __typename, scalarValues: options.scalarValues }) : values.curso,
-    desertor: (values.desertor === null || values.desertor === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'desertor', __typename, scalarValues: options.scalarValues }) : values.desertor,
-    email: (values.email === null || values.email === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'email', __typename, scalarValues: options.scalarValues }) : values.email,
-    externo: (values.externo === null || values.externo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'Boolean', mappedTypeName: 'boolean', fieldName: 'externo', __typename, scalarValues: options.scalarValues }) : values.externo,
-    genero: (values.genero === null || values.genero === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'genero', __typename, scalarValues: options.scalarValues }) : values.genero,
-    institucionalEmail: values.institucionalEmail,
-    nivel: (values.nivel === null || values.nivel === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nivel', __typename, scalarValues: options.scalarValues }) : values.nivel,
-    nombre: (values.nombre === null || values.nombre === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'nombre', __typename, scalarValues: options.scalarValues }) : values.nombre,
-    telefono: (values.telefono === null || values.telefono === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'telefono', __typename, scalarValues: options.scalarValues }) : values.telefono
+    })(values.unenrolledStudent || undefined, options)
   };
 };

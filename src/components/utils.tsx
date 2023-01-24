@@ -3,7 +3,7 @@ import Alert from "react-bootstrap/Alert";
 import { useQuery, gql } from "@apollo/client";
 
 export const GET_SCHEDULE = gql`
-  query getSchedule($id: Int!) {
+  query getSchedule($id: ID!) {
     group(id: $id) {
       name
       time

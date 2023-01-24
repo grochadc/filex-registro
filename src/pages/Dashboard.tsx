@@ -27,8 +27,7 @@ export const GET_LEVELS_REGISTERING = gql`
 
 export const GET_MASTERLIST = gql`
   query GetMasterList {
-    masterlist(ciclo: "2022B") {
-      id
+    masterlist(ciclo: "2023A") {
       codigo
       nombre
       apellido_paterno
@@ -41,7 +40,10 @@ export const GET_MASTERLIST = gql`
       email
       curso
       nivel
-      grupo
+      group {
+        name
+      }
+   
     }
   }
 `;

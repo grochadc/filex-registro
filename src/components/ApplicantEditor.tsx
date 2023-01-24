@@ -13,7 +13,7 @@ const ApplicantSchema = Yup.object().shape({
   apellido_paterno: Yup.string().required("Obligatorio"),
   genero: Yup.mixed().oneOf(["M", "F"]).required("Obligatorio"),
   carrera: Yup.string().required("Obligatorio"),
-  ciclo: Yup.string()
+  cicloIngreso: Yup.string()
     .matches(
       /\d{4}(A|B)/,
       "El ciclo debe tener el formato de cuatro digitos para el año y la letra A o B en mayúscula. Ej. 2021A"
@@ -38,10 +38,10 @@ const ApplicantSchema = Yup.object().shape({
       is: false,
       then: (schema) => schema.required("Obligatorio"),
     }),
-  nivel: Yup.number(),
-  curso: Yup.mixed().oneOf(["en", "fr"]),
-  externo: Yup.boolean(),
-  desertor: Yup.boolean(),
+  //nivel: Yup.number(),
+  //curso: Yup.mixed().oneOf(["en", "fr"]),
+  //externo: Yup.boolean(),
+  //desertor: Yup.boolean(),
 });
 
 type ApplicantSelectionFormProps = {
@@ -113,30 +113,10 @@ type ApplicantEditorProps = {
   onSubmit: (values: any) => void;
 };
 const ApplicantEditor = (props: ApplicantEditorProps) => {
-  const handleSubmit = (values) => {
-    props.onSubmit(values);
-  };
-  const defaultValues = {
-    codigo: "",
-    nombre: "",
-    apellido_materno: "",
-    apellido_paterno: "",
-    genero: "",
-    carrera: "",
-    ciclo: "",
-    telefono: "",
-    email: "",
-    institucionalEmail: "",
-    nivel: "",
-    curso: "",
-    externo: false,
-    desertor: false,
-  };
   const formik = useFormik({
     validationSchema: ApplicantSchema,
-    initialValues:
-      props.type === "create" ? defaultValues : props.initialValues,
-    onSubmit: handleSubmit,
+    initialValues: props.initialValues,
+    onSubmit: props.onSubmit,
   });
   return (
     <EditorContainer>
@@ -231,11 +211,11 @@ const ApplicantEditor = (props: ApplicantEditorProps) => {
           <input
             id="ciclo"
             type="text"
-            value={formik.values.ciclo}
+            value={formik.values.cicloIngreso}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.errors.ciclo ? (
+          {formik.errors.cicloIngreso ? (
             <Alert variant="warning">{formik.errors.ciclo}</Alert>
           ) : null}
         </Field>
