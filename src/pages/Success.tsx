@@ -10,9 +10,9 @@ type SuccessProps = {
       aula: string;
       time: string;
       message?: string | null;
-    }
-  }
-}
+    };
+  };
+};
 const Success = (props: SuccessProps) => {
   const { info } = props;
   return (
@@ -27,11 +27,16 @@ const Success = (props: SuccessProps) => {
       <div>
         Aqui tienes los datos de tu clase:
         <p>
-          {info.group.aula}{" "}{info.group.time}
+          {info.group.aula} {info.group.time}
         </p>
-        {info.group.message ? <p>Un mensaje de tu teacher: <a>{info.group.message}</a></p> : null}
+        {info.group.message ? (
+          <p>
+            Un mensaje de tu teacher:{" "}
+            <a href={info.group.message}>{info.group.message}</a>
+          </p>
+        ) : null}
         <p>Clases de Lunes a Jueves</p>
-        <p>Inicio de Cursos  de Febrero</p>
+        <p>Inicio de Cursos 7 de Febrero</p>
       </div>
     </div>
   );
