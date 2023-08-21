@@ -13,40 +13,40 @@ import ApplicantEditor from "../../components/ApplicantEditor";
 import ScheduleSelection from "../../components/ScheduleSelection";
 
 export const GetApplicant = gql`
-  query GetApplicant($codigo: ID!) {
-    unenrolledStudent(codigo: $codigo) {
-      codigo
-      nombre
-      apellido_materno
-      apellido_paterno
-      genero
-      carrera
-      cicloIngreso
-      telefono
-      email
-      institucionalEmail
-      nivel
-      curso
-      externo
-      registering
-      desertor
-      registeredGroup {
-        ciclo
-        name
-        time
-        aula
-        teacher
-      }
-      groups {
-        id
-        ciclo
-        name
-        time
-        aula
-        teacher
-      }
+query GetApplicant($codigo: ID!, $cicloActual: String!) {
+  unenrolledStudent(codigo: $codigo, cicloActual:$cicloActual) {
+    codigo
+    nombre
+    apellido_materno
+    apellido_paterno
+    genero
+    carrera
+    cicloIngreso
+    telefono
+    email
+    institucionalEmail
+    nivel
+    curso
+    externo
+    registering
+    desertor
+    registeredGroup {
+      ciclo
+      name
+      time
+      aula
+      teacher
+    }
+    groups {
+      id
+      ciclo
+      name
+      time
+      aula
+      teacher
     }
   }
+}
 `;
 
 type SelectionProps = {
@@ -68,7 +68,7 @@ const Selection = (props: SelectionProps) => {
   const params: { code: string } = useParams();
   //const history = useHistory();
   const query = useGetApplicantQuery({
-    variables: { codigo: params.code },
+    variables: { codigo: params.code, cicloActual: "2023B" },
     onCompleted: (data) => {
       if (data?.unenrolledStudent !== undefined) {
         setStudent(data.unenrolledStudent);
@@ -79,7 +79,7 @@ const Selection = (props: SelectionProps) => {
   const { data } = query;
 
   const [showScheduleSelection, setShowScheduleSelection] = useState(false);
-  useEffect(() => {}, [showScheduleSelection]);
+  useEffect(() => { }, [showScheduleSelection]);
 
   const handleApplicantEditorSubmit = (values: any) => {
     setStudent({ ...student, ...values });
@@ -95,7 +95,7 @@ const Selection = (props: SelectionProps) => {
         nivel: student?.nivel,
         curso: student?.curso,
         group: selectedGroup.name,
-        groupId: selectedGroup.id, 
+        groupId: selectedGroup.id,
       });
     }
   };

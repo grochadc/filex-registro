@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
-import Home from "./pages/Home";
+import Home from "./components/Home";
 import Dashboard from "./pages/Dashboard";
 import Selection from "./pages/Selection";
-import Success from "./pages/Success";
+import Success from "./components/Success";
 //import EditApplicantPage from "./pages/EditApplicantPage";
 import { gql } from "@apollo/client";
 import {
@@ -54,16 +54,17 @@ function App() {
     group: { name: "", time: "", aula: "", teacher: "" },
   });
 
-  const [registerStudent, { error }] = useRegisterStudentMutation();
+  const [registerStudent, { error }] = useRegisterStudentMutation({
+    onCompleted: (res) => {
+      setRegisteredInfo(res.registerStudent);
+      history.push("/success");
+    }
+  });
 
   const handleSelection = (student) => {
     const { __typename, ...variables } = student;
     registerStudent({
-      variables,
-      onCompleted: (res) => {
-        setRegisteredInfo(res.registerStudent);
-        history.push("/success");
-      },
+      variables
     });
   };
 
