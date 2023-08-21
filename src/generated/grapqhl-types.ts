@@ -257,6 +257,7 @@ export type QueryTestResultsArgs = {
 
 
 export type QueryUnenrolledStudentArgs = {
+  cicloActual: Scalars['String'];
   codigo: Scalars['ID'];
 };
 
@@ -310,6 +311,7 @@ export type TestResults = {
   carrera: Scalars['String'];
   ciclo: Scalars['String'];
   codigo: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
   curso: Scalars['String'];
   email: Scalars['String'];
   externo: Scalars['Boolean'];
@@ -415,6 +417,7 @@ export type GetMasterListQuery = { __typename?: 'Query', masterlist: Array<{ __t
 
 export type GetApplicantQueryVariables = Exact<{
   codigo: Scalars['ID'];
+  cicloActual: Scalars['String'];
 }>;
 
 
@@ -619,8 +622,8 @@ export type GetMasterListQueryHookResult = ReturnType<typeof useGetMasterListQue
 export type GetMasterListLazyQueryHookResult = ReturnType<typeof useGetMasterListLazyQuery>;
 export type GetMasterListQueryResult = Apollo.QueryResult<GetMasterListQuery, GetMasterListQueryVariables>;
 export const GetApplicantDocument = gql`
-    query GetApplicant($codigo: ID!) {
-  unenrolledStudent(codigo: $codigo) {
+    query GetApplicant($codigo: ID!, $cicloActual: String!) {
+  unenrolledStudent(codigo: $codigo, cicloActual: $cicloActual) {
     codigo
     nombre
     apellido_materno
@@ -668,6 +671,7 @@ export const GetApplicantDocument = gql`
  * const { data, loading, error } = useGetApplicantQuery({
  *   variables: {
  *      codigo: // value for 'codigo'
+ *      cicloActual: // value for 'cicloActual'
  *   },
  * });
  */
