@@ -410,7 +410,9 @@ export type GetLevelsRegisteringQueryVariables = Exact<{ [key: string]: never; }
 
 export type GetLevelsRegisteringQuery = { __typename?: 'Query', english: Array<string>, french: Array<string> };
 
-export type GetMasterListQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetMasterListQueryVariables = Exact<{
+  ciclo: Scalars['String'];
+}>;
 
 
 export type GetMasterListQuery = { __typename?: 'Query', masterlist: Array<{ __typename?: 'EnrolledStudent', codigo: string, nombre: string, apellido_paterno: string, apellido_materno: string, genero: string, ciclo: string, carrera: string, externo: boolean, telefono: string, email: string, curso: string, nivel: string, group: { __typename?: 'Group', name: string } }> };
@@ -574,8 +576,8 @@ export type GetLevelsRegisteringQueryHookResult = ReturnType<typeof useGetLevels
 export type GetLevelsRegisteringLazyQueryHookResult = ReturnType<typeof useGetLevelsRegisteringLazyQuery>;
 export type GetLevelsRegisteringQueryResult = Apollo.QueryResult<GetLevelsRegisteringQuery, GetLevelsRegisteringQueryVariables>;
 export const GetMasterListDocument = gql`
-    query GetMasterList {
-  masterlist(ciclo: "2023A") {
+    query GetMasterList($ciclo: String!) {
+  masterlist(ciclo: $ciclo) {
     codigo
     nombre
     apellido_paterno
@@ -607,10 +609,11 @@ export const GetMasterListDocument = gql`
  * @example
  * const { data, loading, error } = useGetMasterListQuery({
  *   variables: {
+ *      ciclo: // value for 'ciclo'
  *   },
  * });
  */
-export function useGetMasterListQuery(baseOptions?: Apollo.QueryHookOptions<GetMasterListQuery, GetMasterListQueryVariables>) {
+export function useGetMasterListQuery(baseOptions: Apollo.QueryHookOptions<GetMasterListQuery, GetMasterListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetMasterListQuery, GetMasterListQueryVariables>(GetMasterListDocument, options);
       }

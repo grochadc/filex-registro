@@ -26,8 +26,8 @@ export const GET_LEVELS_REGISTERING = gql`
 `;
 
 export const GET_MASTERLIST = gql`
-  query GetMasterList {
-    masterlist(ciclo: "2023A") {
+  query GetMasterList($ciclo: String!) {
+    masterlist(ciclo: $ciclo) {
       codigo
       nombre
       apellido_paterno
@@ -51,8 +51,11 @@ export const GET_MASTERLIST = gql`
 const Dashboard: React.FC = () => {
   const [getMasterList] = useGetMasterListLazyQuery({
     onCompleted: ({ masterlist }) => {
-      downloadMasterList(masterlist, 'masterlist2022B')
+      downloadMasterList(masterlist, 'masterlist2023B')
     },
+    variables: {
+      ciclo: "2023B"
+    }
   });
   const [savingLevels, setSavingLevels] = React.useState(false);
   const [levelsSaved, setLevelsSaved] = React.useState(false);
