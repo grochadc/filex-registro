@@ -10,7 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const ServerUri =
   process.env.NODE_ENV === "production"
-    ? "https://filex-database.herokuapp.com/"
+    ? "https://api.filexcusur.com/"
     : "http://localhost:5000/";
 
 const clientEnviroment =
