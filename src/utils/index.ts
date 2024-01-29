@@ -24,3 +24,9 @@ export function downloadMasterList(
   document.body.appendChild(el);
   el.click();
 }
+
+export function calculateCicloActual(date: Date): string {
+  const year = date.getFullYear().toString();
+  const semester = date.getMonth() > 6 ? "B" : "A";
+  return year + semester;
+};

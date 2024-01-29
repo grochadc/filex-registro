@@ -15,6 +15,7 @@ import {
 } from "./generated/grapqhl-types";
 import { useHistory } from "react-router-dom";
 import { Error } from "./components/utils";
+import { calculateCicloActual } from "./utils";
 
 export const RegisterStudent = gql`
   mutation RegisterStudent(
@@ -76,7 +77,7 @@ function App() {
   return (
     <div>
       <Jumbotron>
-        <h1>FILEX 2023B</h1>
+        <h1>FILEX {calculateCicloActual(new Date())}</h1>
         <h2>INSCRIPCION</h2>
       </Jumbotron>
       <Container>

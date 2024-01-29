@@ -8,13 +8,14 @@ import {
   useGetApplicantQuery,
   GetApplicantQuery,
 } from "../../generated/grapqhl-types";
+import { calculateCicloActual } from "../../utils";
 
 import ApplicantEditor from "../../components/ApplicantEditor";
 import ScheduleSelection from "../../components/ScheduleSelection";
 
 export const GetApplicant = gql`
-query GetApplicant($codigo: ID!, $cicloActual: String!) {
-  unenrolledStudent(codigo: $codigo, cicloActual:$cicloActual) {
+query GetApplicant($codigo: ID!, $cicloActual:String!) {
+  unenrolledStudent(codigo: $codigo, cicloActual: $cicloActual) {
     codigo
     nombre
     apellido_materno
@@ -68,7 +69,7 @@ const Selection = (props: SelectionProps) => {
   const params: { code: string } = useParams();
   //const history = useHistory();
   const query = useGetApplicantQuery({
-    variables: { codigo: params.code, cicloActual: "2023B" },
+    variables: { codigo: params.code, cicloActual: calculateCicloActual(new Date()) },
     onCompleted: (data) => {
       if (data?.unenrolledStudent !== undefined) {
         setStudent(data.unenrolledStudent);
@@ -115,6 +116,7 @@ const Selection = (props: SelectionProps) => {
   }, [data, props]);
 
   if (query.loading) return <Loading />;
+  if(query.error) console.log(query.error);
   if (query.error) {
     return <Error err={query.error} />;
   }
