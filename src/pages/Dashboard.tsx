@@ -10,7 +10,7 @@ import {
   useGetMasterListLazyQuery,
 } from "../generated/grapqhl-types";
 
-import { downloadMasterList } from "../utils";
+import { downloadMasterList, calculateCicloActual } from "../utils";
 
 export const SAVE_LEVELS_REGISTERING = gql`
   mutation saveLevels($levels: [String!]!, $course: String!) {
@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
       downloadMasterList(masterlist, 'masterlist2023B')
     },
     variables: {
-      ciclo: "2023B"
+      ciclo: calculateCicloActual(new Date())
     }
   });
   const [savingLevels, setSavingLevels] = React.useState(false);
