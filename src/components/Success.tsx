@@ -36,7 +36,7 @@ const Success = (props: SuccessProps) => {
           </p>
         ) : null}
         <p>Clases de Lunes a Jueves</p>
-        <p>Inicio de Cursos 28 de Agosto</p>
+        <p>Inicio de Cursos 06 de Febrero</p>
       </div>
     </div>
   );

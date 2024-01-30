@@ -116,10 +116,10 @@ operations.getLevelsRegistering.data = (values = {}, options = {}) => {
 operations.GetMasterList = {};
 operations.GetMasterList.variables = (values = {}, options = {}) => {
   const __typename = '';
-  values = (({  }) => ({  }))(values);
+  values = (({ ciclo = undefined }) => ({ ciclo }))(values);
   values.__typename = __typename;
   return {
-
+    ciclo: (values.ciclo === null || values.ciclo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'ciclo', __typename, scalarValues: options.scalarValues }) : values.ciclo
   };
 };
 operations.GetMasterList.data = (values = {}, options = {}) => {
@@ -162,10 +162,11 @@ operations.GetMasterList.data = (values = {}, options = {}) => {
 operations.GetApplicant = {};
 operations.GetApplicant.variables = (values = {}, options = {}) => {
   const __typename = '';
-  values = (({ codigo = undefined }) => ({ codigo }))(values);
+  values = (({ codigo = undefined, cicloActual = undefined }) => ({ codigo, cicloActual }))(values);
   values.__typename = __typename;
   return {
-    codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo
+    codigo: (values.codigo === null || values.codigo === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'ID', mappedTypeName: 'string', fieldName: 'codigo', __typename, scalarValues: options.scalarValues }) : values.codigo,
+    cicloActual: (values.cicloActual === null || values.cicloActual === undefined) ? options.getDefaultScalarValue({ scalarTypeName: 'String', mappedTypeName: 'string', fieldName: 'cicloActual', __typename, scalarValues: options.scalarValues }) : values.cicloActual
   };
 };
 operations.GetApplicant.data = (values = {}, options = {}) => {
